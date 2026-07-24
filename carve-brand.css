@@ -39,3 +39,19 @@
    injection can never leave the header logo-less. */
 a:has(> .carve-lockup) [data-framer-name="Logotype"],
 a:has(> .carve-lockup) > div[data-framer-component-type="SVG"] { display: none !important; }
+
+/* ---- Scroll reveal for our injected sections ----
+   Framer's own sections animate in (opacity .001→1, y 32→0, spring damping 80 / stiffness 300).
+   Ours appeared flat, so the page felt inconsistent. This matches that motion with a curve that
+   approximates the same spring.
+   NOTE: never transform #cx-hiw itself — a transformed ancestor becomes the containing block for
+   position:sticky and would break the pinned walkthrough. Only its intro is animated. */
+.cx-reveal { opacity: .001; transform: translateY(32px);
+  transition: opacity .55s ease, transform .7s cubic-bezier(.2,.75,.2,1); transition-delay: .05s; }
+.cx-reveal.cx-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .cx-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* Footer lockup: centre it in its bar instead of hugging the left edge. */
+img[alt="logomark"] { object-position: center !important; }

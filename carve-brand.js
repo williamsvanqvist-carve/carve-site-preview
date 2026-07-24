@@ -46,7 +46,7 @@
   function setImg(el, src) { if (el && el.getAttribute("src") !== src) { el.setAttribute("src", src); el.removeAttribute("srcset"); } }
   function swapImages() {
     var foot = document.querySelector('img[alt="logomark"]');            /* footer wordmark → full lockup */
-    if (foot) { setImg(foot, "./assets/carve/lockup-white.svg"); foot.style.objectFit = "contain"; foot.style.objectPosition = "left center"; }
+    if (foot) { setImg(foot, "./assets/carve/lockup-white.svg"); foot.style.objectFit = "contain"; foot.style.objectPosition = "center"; }
     setImg(document.querySelector('img[alt="logo"]'), "./assets/carve/orb.svg");  /* CTA emblem (section hidden; kept for safety) */
     /* nav logo → carve.ac's real lockup (orb + wordmark in the brand's own logo typography). */
     ensureNavLogos();
@@ -276,6 +276,23 @@
       if (a.textContent.trim() !== m.t) a.textContent = m.t;
     });
   }
+  /* Give our injected sections the same scroll-in motion Framer gives its own, so the page reads
+     as one piece. Observed once each; the class is what CSS animates. */
+  var revealIO = null;
+  function armReveals() {
+    if (!("IntersectionObserver" in window)) return;
+    if (!revealIO) revealIO = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("cx-in"); revealIO.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.06 });
+    var targets = [].slice.call(document.querySelectorAll(
+      "#carve-sec-channels iframe, #carve-sec-stories iframe, #carve-sec-authorities iframe, #carve-guarantee-band iframe, #cx-hiw .cx-hiw-intro"));
+    targets.forEach(function (el) {
+      if (el.classList.contains("cx-reveal")) return;
+      el.classList.add("cx-reveal");
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) el.classList.add("cx-in"); /* already in view on load */
+      else revealIO.observe(el);
+    });
+  }
   function injectSections() {
     injectHowItWorks();
     /* channels (and any following bands) anchor AFTER the native HIW section, so the
@@ -322,6 +339,7 @@
     fixCtas();
     fixNav();
     killDeadLinks();   /* after nav/CTA wiring, so only truly decorative anchors are stripped */
+    armReveals();      /* match Framer's scroll-in motion on our sections */
   }
   /* After the initial hydration burst, top-ups run only when the browser is idle, so the
      re-apply loop never competes with scroll/animation frames (smoother, less jank). */
