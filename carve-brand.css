@@ -1,5 +1,5 @@
 /* CARVE-BRAND — only colors + fonts. Structure/gradients/animations untouched. */
-@font-face{font-family:'Redaction';src:url('/assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'Redaction';src:url('./assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400;font-display:swap}
 
 /* Recolor Framer's tokens → warm Carve palette. Gradients keep their structure,
    only the color stops shift (blue→terracotta, black→warm ink, #fafafa→parchment). */
