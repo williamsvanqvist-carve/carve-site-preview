@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400}
+  :root{--bg:#F5F0E8;--bg-2:#EDE7DC;--ink:#1A1410;--ink-2:#5C4F45;--ink-3:#857567;
+    --accent:#8B4A2C;--positive:#2D6A4F;--border:rgba(26,20,16,.10);--border-2:rgba(26,20,16,.16);
+    --serif:'Redaction',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:100%;height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;display:flex;align-items:center}
+  .shell{width:min(100% - 96px,1160px);margin:0 auto;display:grid;grid-template-columns:.92fr 1.08fr;gap:70px;align-items:center}
+  .copy h2{margin:0;font:400 italic 52px/1.04 var(--serif);letter-spacing:-.025em;max-width:460px}
+  .copy p{margin:22px 0 0;max-width:440px;color:var(--ink-2);font-size:19px;line-height:1.62}
+  .quote{margin:28px 0 0;padding-left:22px;border-left:2px solid var(--accent);color:var(--ink-2);font:400 italic 22px/1.4 var(--serif)}
+  .list{border-top:1px solid var(--border-2)}
+  .row{display:grid;grid-template-columns:44px 1fr auto;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--border)}
+  .num{color:rgba(139,74,44,.5);font:400 italic 26px/1 var(--serif)}
+  .row strong{display:block;font-size:17px;font-weight:500}
+  .row small{display:block;margin-top:4px;color:var(--ink-3);font-size:13.5px}
+  .role{color:var(--accent);font:500 12px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;text-align:right;white-space:nowrap}
+  .role.opt{color:var(--ink-3)}
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div class="copy">
+      <h2>Carve knows the difference between insight and fact.</h2>
+      <p>Buyer context helps decide what matters. It never becomes permission to invent a product claim.</p>
+      <div class="quote">If the answer only the merchant can know is missing, Carve asks. It does not fill the silence with confidence.</div>
+    </div>
+    <div class="list">
+      <div class="row"><span class="num">01</span><div><strong>Merchant product data</strong><small>Titles, descriptions, variants, specs, Q&amp;A</small></div><span class="role">Factual authority</span></div>
+      <div class="row"><span class="num">02</span><div><strong>Storefront content</strong><small>Custom Shopify fields and the live PDP structure</small></div><span class="role">Factual authority</span></div>
+      <div class="row"><span class="num">03</span><div><strong>Product imagery</strong><small>What is genuinely visible — not hidden specs</small></div><span class="role">Visual evidence</span></div>
+      <div class="row"><span class="num">04</span><div><strong>Verified product research</strong><small>Exact-product sources with receipts and scope</small></div><span class="role opt">Optional evidence</span></div>
+      <div class="row"><span class="num">05</span><div><strong>Search &amp; buyer language</strong><small>GSC queries calibrate vocabulary, never facts</small></div><span class="role opt">Demand context</span></div>
+    </div>
+  </div>
+<script>
+/* Auto-height. These band pages are flex-centred at height:100%, so any measurement taken as-is
+   just mirrors the frame — and growing the frame would grow the "content" in a feedback loop.
+   Briefly release the height, measure the NATURAL content, restore, then report it up. */
+(function(){
+  var last=0;
+  function report(){
+    var de=document.documentElement, b=document.body;
+    var dh=de.style.height, bh=b.style.height, ov=b.style.overflow;
+    de.style.height="auto"; b.style.height="auto"; b.style.overflow="visible";
+    var h=Math.ceil(b.scrollHeight)+110;
+    de.style.height=dh; b.style.height=bh; b.style.overflow=ov;
+    if(Math.abs(h-last)<4) return; last=h;
+    parent.postMessage({carveHeight:h, carveSrc:location.pathname},"*");
+  }
+  addEventListener("load",report); addEventListener("resize",report);
+  setTimeout(report,300); setTimeout(report,1000);
+})();
+</script>
+</body>
+</html>

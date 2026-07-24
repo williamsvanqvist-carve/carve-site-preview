@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Carve">
+  <defs>
+    <radialGradient id="carve-orb-body" cx="0.38" cy="0.38" r="0.72">
+      <stop offset="0%" stop-color="#C57150"/>
+      <stop offset="50%" stop-color="#8B4A2C"/>
+      <stop offset="100%" stop-color="#4A2816"/>
+    </radialGradient>
+    <radialGradient id="carve-orb-shadow" cx="0.72" cy="0.78" r="0.62">
+      <stop offset="0%" stop-color="#1A100A" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1A100A" stop-opacity="0.32"/>
+    </radialGradient>
+    <radialGradient id="carve-orb-spec" cx="0.3" cy="0.25" r="0.28">
+      <stop offset="0%" stop-color="#FFF5E6" stop-opacity="0.52"/>
+      <stop offset="100%" stop-color="#FFF5E6" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="carve-orb-clip">
+      <circle cx="64" cy="64" r="60"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#carve-orb-clip)">
+    <circle cx="64" cy="64" r="60" fill="url(#carve-orb-body)"/>
+    <circle cx="64" cy="64" r="60" fill="url(#carve-orb-shadow)"/>
+    <circle cx="64" cy="64" r="60" fill="url(#carve-orb-spec)"/>
+  </g>
+</svg>

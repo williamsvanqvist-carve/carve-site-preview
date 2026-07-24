@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style id="cx-hiw-style">
+/* ============ Carve — PINNED sticky-scroll How-it-works (scoped .cx-hiw) ============ */
+@font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400;font-display:swap}
+
+.cx-hiw{--paper:#F5F0E8;--paper-2:#EFE8DC;--card:#FBF8F2;--ink:#1A1410;--ink-2:#5C4F45;--ink-3:#8A7B6D;
+  --terra:#A9542E;--terra-dk:#7E3D25;--terra-soft:#EAD8C6;--green:#2F6A4F;--green-soft:#E0EBE3;
+  --line:rgba(26,20,16,.10);--line-2:rgba(26,20,16,.17);
+  --serif:'Redaction',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  position:relative;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.cx-hiw *{box-sizing:border-box;margin:0}
+.cx-hiw-shell{width:min(100% - 96px,1240px);margin:0 auto}
+
+/* intro — scrolls normally, then the pin engages */
+.cx-hiw-intro{padding:104px 0 40px}
+.cx-hiw-intro .in{max-width:860px}
+.cx-hiw-eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--terra);font:500 12.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase}
+.cx-hiw-eyebrow::before{content:"";width:24px;height:1px;background:var(--terra)}
+.cx-hiw-intro h2{margin:22px 0 0;font:400 clamp(38px,4.4vw,56px)/1.02 var(--serif);letter-spacing:-.028em;max-width:15ch}
+.cx-hiw-intro p{margin:22px 0 0;max-width:600px;color:var(--ink-2);font-size:18px;line-height:1.62}
+
+/* pinned scroll region: tall spacer + a sticky 100vh frame that locks */
+.cx-hiw-scroll{position:relative;height:540vh}          /* 5 steps → ~88vh of scroll each */
+.cx-hiw-pin{position:sticky;top:0;height:100vh;min-height:660px;display:flex;align-items:center;overflow:hidden}
+.cx-hiw-body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:60px;align-items:center;width:100%}
+
+/* left — the walkthrough progress rail (stays put, ticks in order) */
+.cx-hiw-rail{align-self:center}
+.cx-hiw-rail-title{margin-bottom:22px;color:var(--ink-3);font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.cx-hiw-rail-items{position:relative}
+.cx-hiw-rail-items::before{content:"";position:absolute;top:12px;bottom:12px;left:13px;width:1px;background:var(--line-2)}
+.cx-hiw-rail-items::after{content:"";position:absolute;top:12px;left:13px;width:1px;background:var(--terra);height:var(--rail-fill,0%);transition:height .5s cubic-bezier(.4,0,.2,1)}
+.cx-hiw-rail-link{position:relative;display:grid;grid-template-columns:27px 1fr;gap:15px;padding:0 0 30px;color:var(--ink-3)}
+.cx-hiw-rail-link:last-child{padding-bottom:0}
+.cx-hiw-rail-link i{position:relative;z-index:1;width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:var(--paper);border:1px solid var(--line-2);color:var(--ink-3);font:500 11px/1 var(--mono);transition:.35s ease}
+.cx-hiw-rail-link span{display:block;font:500 9.5px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.cx-hiw-rail-link b{display:block;margin-top:6px;font-size:14px;font-weight:500;line-height:1.2}
+.cx-hiw-rail-link.done i{background:var(--terra-soft);border-color:var(--terra-soft);color:var(--terra-dk)}
+.cx-hiw-rail-link.active{color:var(--ink)}
+.cx-hiw-rail-link.active i{background:var(--terra);border-color:var(--terra);color:#fff;box-shadow:0 6px 16px rgba(169,84,46,.32)}
+
+/* right — the stage where each step's card rises up in place */
+.cx-hiw-stage{position:relative;height:min(80vh,700px);min-height:540px}
+.cx-hiw-scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transform:translateY(38px);pointer-events:none;
+  transition:opacity .55s ease,transform .6s cubic-bezier(.2,.75,.2,1)}
+.cx-hiw-scene.active{opacity:1;transform:none;pointer-events:auto}
+.cx-hiw-scene.past{opacity:0;transform:translateY(-30px)}
+.cx-hiw-scene-time{color:var(--terra);font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.cx-hiw-scene h3{margin:12px 0 0;font:400 clamp(26px,2.7vw,36px)/1.05 var(--serif);letter-spacing:-.022em;max-width:18ch}
+.cx-hiw-scene>p{margin:12px 0 0;max-width:600px;color:var(--ink-2);font-size:15.5px;line-height:1.55}
+.cx-hiw-panel{margin-top:22px;border:1px solid var(--line-2);border-radius:20px;background:var(--card);
+  box-shadow:0 26px 70px rgba(60,35,15,.10);overflow:hidden}
+.cx-hiw-panel-top{height:48px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--line);background:rgba(251,248,242,.9)}
+.cx-hiw-panel-top img{height:16px;width:auto}
+.cx-hiw-panel-top .crumb{color:var(--ink-3);font:400 10.5px/1 var(--mono)}
+.cx-hiw-panel-top .status{margin-left:auto;display:inline-flex;align-items:center;gap:8px;color:var(--green);font:500 10.5px/1 var(--mono);text-transform:uppercase}
+.cx-hiw-panel-top .status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* scene 1 — connect */
+.cx-connect{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.cx-connect>div{background:var(--card);padding:26px 28px}
+.cx-connect .rows{display:grid;gap:10px}
+.cx-src{display:grid;grid-template-columns:38px 1fr 20px;gap:13px;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.cx-src img{width:30px;height:30px;object-fit:contain}
+.cx-src b{display:block;font-size:13.5px;font-weight:500}
+.cx-src span{display:block;margin-top:3px;color:var(--ink-3);font-size:11.5px}
+.cx-src i{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:var(--green-soft);color:var(--green);font:500 11px/1 var(--sans);font-style:normal}
+.cx-connect .over span{color:var(--terra);font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.cx-connect .over h4{margin:9px 0 0;font-size:21px;font-weight:500}
+.cx-connect .over>p{margin:8px 0 18px;color:var(--ink-2);font-size:12.5px;line-height:1.5}
+.cx-kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--line)}
+.cx-kpis div{background:var(--card);padding:14px 15px}
+.cx-kpis small{display:block;color:var(--ink-3);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-kpis b{display:block;margin-top:7px;font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}
+.cx-kpis em{color:var(--green);font:500 10px/1 var(--mono);font-style:normal}
+.cx-ready{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--ink);color:#F5F0E8}
+.cx-ready span{color:rgba(245,240,232,.5);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-ready b{display:block;margin-top:7px;font-size:13px;font-weight:500;line-height:1.45}
+
+/* scene 2 — onboard */
+.cx-know{padding:26px 28px}
+.cx-know-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px}
+.cx-know-head span{color:var(--terra);font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.cx-know-head h4{margin:10px 0 0;font:400 italic 24px/1.1 var(--serif);max-width:15ch}
+.cx-pill{padding:9px 13px;border-radius:999px;background:var(--green-soft);color:var(--green);font:500 11px/1 var(--mono);white-space:nowrap}
+.cx-know-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cx-know-card{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.cx-know-card.wide{grid-column:1/-1}
+.cx-know-card label{display:block;color:var(--ink-3);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-know-card strong{display:block;margin-top:10px;font-size:13.5px;font-weight:500;line-height:1.4}
+.cx-know-card p{margin:7px 0 0;color:var(--ink-2);font-size:12px;line-height:1.5}
+.cx-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.cx-chips span{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink-2);font:400 11px/1 var(--mono)}
+.cx-chips.fields span::before{content:"✓ ";color:var(--green);font-weight:600}
+
+/* scene 3 — work (signature) */
+.cx-work{display:grid;grid-template-columns:1.02fr .98fr;min-height:400px}
+.cx-lab{position:relative;border-right:1px solid var(--line);overflow:hidden;
+  background:radial-gradient(circle at 42% 44%,rgba(169,84,46,.11),transparent 32%),linear-gradient(140deg,#F0E7DA,#FBF8F2 55%,#EEE4D6)}
+.cx-lab .orbit{position:absolute;left:44%;top:47%;width:320px;height:320px;border:1px solid rgba(169,84,46,.24);border-radius:50%;transform:translate(-50%,-50%)}
+.cx-lab .orbit::before{content:"";position:absolute;inset:32px;border:1px dashed rgba(169,84,46,.3);border-radius:50%;animation:cx-spin 22s linear infinite}
+@keyframes cx-spin{to{transform:rotate(360deg)}}
+.cx-lab>img{position:absolute;z-index:2;left:44%;top:48%;width:196px;height:310px;object-fit:contain;transform:translate(-50%,-50%);filter:drop-shadow(0 24px 26px rgba(28,22,18,.17))}
+.cx-note{position:absolute;z-index:4;min-width:146px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:rgba(251,248,242,.94);box-shadow:0 12px 30px rgba(28,22,18,.1)}
+.cx-note b{display:block;font-size:11px;font-weight:500}
+.cx-note span{display:block;margin-top:4px;color:var(--ink-3);font:400 9px/1 var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.cx-note.n1{left:6%;top:14%}.cx-note.n2{right:5%;top:40%}.cx-note.n3{right:8%;bottom:15%}
+.cx-lab .label{position:absolute;z-index:4;left:7%;bottom:20px}
+.cx-lab .label span{color:var(--terra);font:500 10px/1 var(--mono);text-transform:uppercase}
+.cx-lab .label h5{margin:7px 0 0;font-size:16px;font-weight:500}
+.cx-worksteps{padding:28px 30px}
+.cx-worksteps .lead{font:400 italic 21px/1.2 var(--serif);max-width:22ch}
+.cx-worksteps>p{margin:11px 0 18px;color:var(--ink-2);font-size:12.5px;line-height:1.5}
+.cx-ws{border-top:1px solid var(--line)}
+.cx-ws-row{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;padding:12px 2px;border-bottom:1px solid var(--line)}
+.cx-ws-row>i{width:23px;height:23px;display:grid;place-items:center;border-radius:50%;background:rgba(26,20,16,.07);color:var(--ink-2);font:500 10px/1 var(--mono);font-style:normal}
+.cx-ws-row.hot>i{background:var(--terra);color:#fff}
+.cx-ws-row b{display:block;font-size:12.5px;font-weight:500}
+.cx-ws-row p{margin:4px 0 0;color:var(--ink-2);font-size:11px;line-height:1.45}
+.cx-fields{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;align-items:center}
+.cx-fields>span{color:var(--ink-3);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-fields i{padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink-3);font:400 10.5px/1 var(--mono);font-style:normal}
+.cx-fields i.ready{border-color:rgba(47,106,79,.34);background:var(--green-soft);color:var(--green)}
+
+/* scene 4 — review */
+.cx-review .head3{display:grid;grid-template-columns:150px 1fr 1fr}
+.cx-review .head3 div{padding:12px 18px;color:var(--ink-3);font:500 9.5px/1 var(--mono);text-transform:uppercase;border-bottom:1px solid var(--line)}
+.cx-review .head3 div+div{border-left:1px solid var(--line)}
+.cx-review .head3 div:last-child{color:var(--terra)}
+.cx-rf{display:grid;grid-template-columns:150px 1fr 1fr;border-bottom:1px solid var(--line)}
+.cx-rf>div{padding:15px 18px;min-width:0}
+.cx-rf>div+div{border-left:1px solid var(--line)}
+.cx-rf .fl b{display:block;font-size:12.5px;font-weight:500}
+.cx-rf .fl span{display:block;margin-top:5px;color:var(--ink-3);font:400 9.5px/1.4 var(--mono)}
+.cx-rf .cur{color:var(--ink-3);font-size:12px;line-height:1.5}
+.cx-rf .pro{position:relative;color:var(--ink);font-size:12px;line-height:1.5;background:rgba(169,84,46,.04)}
+.cx-rf .pro .tag{display:inline-block;margin-bottom:7px;padding:4px 8px;border-radius:6px;background:var(--terra-soft);color:var(--terra-dk);font:500 9px/1 var(--mono);text-transform:uppercase}
+.cx-review-foot{display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--paper)}
+.cx-review-foot span{color:var(--ink-2);font-size:12px}
+.cx-review-foot span b{color:var(--ink);font-weight:500}
+.cx-review-foot .push{margin-left:auto;padding:10px 16px;border-radius:9px;background:var(--ink);color:#F5F0E8;font-size:11.5px;font-weight:500;border:0}
+
+/* scene 5 — learn */
+.cx-learn-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.cx-learn-strip .m{padding:18px 20px;border-right:1px solid var(--line)}
+.cx-learn-strip .m:last-child{border-right:0}
+.cx-learn-strip .m span{display:block;color:var(--ink-3);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-learn-strip .m strong{display:block;margin-top:10px;font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
+.cx-learn-strip .m em{display:block;margin-top:6px;color:var(--green);font:500 10px/1 var(--mono);font-style:normal}
+.cx-learn-main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,.9fr);gap:20px;padding:22px}
+.cx-trend{padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.cx-trend-head{display:flex;justify-content:space-between;gap:16px}
+.cx-trend-head span{color:var(--ink-3);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-trend-head b{display:block;margin-top:7px;font-size:12.5px;font-weight:500}
+.cx-trend-head em{color:var(--terra);font:500 10px/1 var(--mono);font-style:normal}
+.cx-trend-chart{height:150px;margin-top:12px}
+.cx-trend-chart svg{width:100%;height:100%;overflow:visible}
+.cx-carry{padding:18px;border-radius:14px;background:var(--terra-soft);border:1px solid rgba(169,84,46,.22)}
+.cx-carry span{color:var(--terra-dk);font:500 9.5px/1 var(--mono);text-transform:uppercase}
+.cx-carry h5{margin:11px 0 0;font:400 italic 19px/1.15 var(--serif)}
+.cx-carry p{margin:10px 0 0;color:var(--terra-dk);font-size:11.5px;line-height:1.5}
+.cx-next{margin-top:12px;padding:10px 12px;border-radius:9px;background:rgba(251,248,242,.75);color:var(--ink-2);font:500 10px/1.4 var(--mono)}
+
+@media(max-width:960px){
+  .cx-hiw-scroll{height:auto}
+  .cx-hiw-pin{position:relative;height:auto;min-height:0;display:block;padding:10px 0 60px}
+  .cx-hiw-body{grid-template-columns:1fr;gap:0}
+  .cx-hiw-rail{display:none}
+  .cx-hiw-stage{height:auto;min-height:0;display:grid;gap:70px}
+  .cx-hiw-scene{position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto}
+  .cx-connect,.cx-work,.cx-learn-main{grid-template-columns:1fr}
+  .cx-lab{min-height:380px;border-right:0;border-bottom:1px solid var(--line)}
+  .cx-review .head3,.cx-rf{grid-template-columns:110px 1fr 1fr}
+  .cx-learn-strip{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body style="margin:0;background:#F5F0E8">
+<section class="cx-hiw" id="cx-hiw">
+  <!-- intro (scrolls, then the pin locks) -->
+  <div class="cx-hiw-intro"><div class="cx-hiw-shell"><div class="in">
+    <span class="cx-hiw-eyebrow">How it works</span>
+    <h2>Carve learns your store, then works every product like your best analyst — continuously.</h2>
+    <p>Connect Shopify, Search Console and GA4. Confirm what Carve understands, set where it can act — then review every action, or let proven work run on Autopilot.</p>
+  </div></div></div>
+
+  <!-- pinned scroll region -->
+  <div class="cx-hiw-scroll" id="cx-hiw-scroll">
+    <div class="cx-hiw-pin"><div class="cx-hiw-shell"><div class="cx-hiw-body">
+      <aside class="cx-hiw-rail" aria-label="How Carve works">
+        <div class="cx-hiw-rail-title">The walkthrough</div>
+        <div class="cx-hiw-rail-items">
+          <a class="cx-hiw-rail-link active" data-rail="0"><i>1</i><div><span>2 min</span><b>Connect store</b></div></a>
+          <a class="cx-hiw-rail-link" data-rail="1"><i>2</i><div><span>Day 0</span><b>Onboard Carve</b></div></a>
+          <a class="cx-hiw-rail-link" data-rail="2"><i>3</i><div><span>First run</span><b>Carve works</b></div></a>
+          <a class="cx-hiw-rail-link" data-rail="3"><i>4</i><div><span>You decide</span><b>Review &amp; ship</b></div></a>
+          <a class="cx-hiw-rail-link" data-rail="4"><i>5</i><div><span>Ongoing</span><b>Measure &amp; learn</b></div></a>
+        </div>
+      </aside>
+
+      <div class="cx-hiw-stage">
+        <!-- 1 CONNECT -->
+        <article class="cx-hiw-scene active" data-scene="0">
+          <div class="cx-hiw-scene-time">01 · 2 minutes</div>
+          <h3>Connect once. Start with a real read of the store.</h3>
+          <p>Carve maps the catalog, how shoppers find you and what happens on the product page. The first output isn’t copy — it’s an evidence-backed overview of the business it’s about to work for.</p>
+          <div class="cx-hiw-panel">
+            <div class="cx-hiw-panel-top"><img src="assets/carve/lockup-black.svg" alt="Carve"><span class="crumb">Northline Supply / First read</span><span class="status">Overview ready</span></div>
+            <div class="cx-connect">
+              <div>
+                <div class="rows">
+                  <div class="cx-src"><img src="assets/carve/shopify.svg" alt="Shopify"><div><b>Shopify</b><span>Products, variants, fields</span></div><i>✓</i></div>
+                  <div class="cx-src"><img src="assets/carve/google.svg" alt="Search Console"><div><b>Search Console</b><span>Queries, clicks, landing pages</span></div><i>✓</i></div>
+                  <div class="cx-src"><img src="assets/carve/ga4.svg" alt="Google Analytics"><div><b>Google Analytics</b><span>Behavior, conversion, revenue</span></div><i>✓</i></div>
+                </div>
+                <div class="cx-ready"><span>Source map complete</span><b>Catalog, demand and performance now resolve to the same products.</b></div>
+              </div>
+              <div class="over">
+                <span>Carve’s overview</span>
+                <h4>Northline Supply</h4>
+                <p>842 products across 18 outdoor brands, read with 90 days of connected performance.</p>
+                <div class="cx-kpis">
+                  <div><small>Products</small><b>842</b></div>
+                  <div><small>Impressions</small><b>4.96M</b><em>+12.6%</em></div>
+                  <div><small>Organic clicks</small><b>178.6K</b><em>+9.8%</em></div>
+                  <div><small>Product revenue</small><b>$1.08M</b><em>+14.1%</em></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2 ONBOARD -->
+        <article class="cx-hiw-scene" data-scene="1">
+          <div class="cx-hiw-scene-time">02 · Day 0</div>
+          <h3>Carve shows its understanding. You make it exact.</h3>
+          <p>Onboarding is a conversation, not a blank form. Carve brings the first read; you correct the positioning, confirm the voice and choose where the first run begins.</p>
+          <div class="cx-hiw-panel">
+            <div class="cx-hiw-panel-top"><img src="assets/carve/lockup-black.svg" alt="Carve"><span class="crumb">Northline Supply / Onboarding</span><span class="status">Ready for handoff</span></div>
+            <div class="cx-know">
+              <div class="cx-know-head">
+                <div><span>What Carve now knows</span><h4>Northline, understood before the first product is touched.</h4></div>
+                <span class="cx-pill">Confirmed by you ✓</span>
+              </div>
+              <div class="cx-know-grid">
+                <div class="cx-know-card"><label>Positioning</label><strong>Capable and considered. Never aggressively technical.</strong><p>Performance matters, but the store should stay useful and understated.</p></div>
+                <div class="cx-know-card"><label>Buyer</label><strong>People who move between outdoors, travel and everyday life.</strong><p>They want products that justify the choice without demanding a separate identity.</p></div>
+                <div class="cx-know-card"><label>Voice</label><strong>Calm, concrete and product-led.</strong><div class="cx-chips"><span>Specific materials</span><span>No hype</span><span>Use before theatre</span></div></div>
+                <div class="cx-know-card"><label>Standing instruction</label><strong>Lead with use. Prove it with construction.</strong><p>Resolve fit, weather and care when the product data supports it.</p></div>
+                <div class="cx-know-card wide"><label>Writable destinations</label><div class="cx-chips fields"><span>Title</span><span>Description</span><span>Q&amp;A</span><span>SEO title</span><span>SEO description</span></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3 WORK -->
+        <article class="cx-hiw-scene" data-scene="2">
+          <div class="cx-hiw-scene-time">03 · First run</div>
+          <h3>Carve investigates before it acts.</h3>
+          <p>Each product is a case to investigate, not a row to process. Carve studies performance, demand and the live page, finds the real constraint, then prepares the right action — in your voice.</p>
+          <div class="cx-hiw-panel">
+            <div class="cx-hiw-panel-top"><img src="assets/carve/lockup-black.svg" alt="Carve"><span class="crumb">Run 018 / Technical layers</span><span class="status">42 / 126 analysed</span></div>
+            <div class="cx-work">
+              <div class="cx-lab">
+                <span class="orbit"></span>
+                <img src="assets/carve/patagonia-better-sweater-vest-cutout.png" alt="Navy fleece vest">
+                <div class="cx-note n1"><b>10-oz recycled fleece</b><span>Verified fact</span></div>
+                <div class="cx-note n2"><b>Comfort under pack straps</b><span>Purchase question</span></div>
+                <div class="cx-note n3"><b>Trailhead to travel day</b><span>Grounded use case</span></div>
+                <div class="label"><span>Patagonia · Men’s fleece</span><h5>Better Sweater® Vest</h5></div>
+              </div>
+              <div class="cx-worksteps">
+                <div class="lead">One product, understood before anything changes.</div>
+                <p>Facts, buyer context and the real constraint stay distinct, so the action fixes what’s actually holding the product back — not a templated guess.</p>
+                <div class="cx-ws">
+                  <div class="cx-ws-row hot"><i>1</i><div><b>Establish what’s true</b><p>Read the record, images, variants, the live PDP and real performance.</p></div></div>
+                  <div class="cx-ws-row"><i>2</i><div><b>Find the real constraint</b><p>Weigh demand, search results and competitors against how the page converts.</p></div></div>
+                  <div class="cx-ws-row"><i>3</i><div><b>Prepare the right action</b><p>Copy, positioning, metadata or structure — whatever moves the outcome.</p></div></div>
+                  <div class="cx-ws-row"><i>✓</i><div><b>Verify before it ships</b><p>Check claims, cut duplication, hold anything uncertain for review.</p></div></div>
+                </div>
+                <div class="cx-fields"><span>Prepared for review</span><i class="ready">Title</i><i>Description</i><i>Q&amp;A</i><i>SEO title</i><i>SEO description</i></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4 REVIEW -->
+        <article class="cx-hiw-scene" data-scene="3">
+          <div class="cx-hiw-scene-time">04 · You decide</div>
+          <h3>See every change before it reaches Shopify.</h3>
+          <p>A clean Current and Proposed comparison on the real store destinations. Include the product, edit a field, or leave it out — then push. Once the pattern earns trust, the same guardrails run on Autopilot.</p>
+          <div class="cx-hiw-panel cx-review">
+            <div class="cx-hiw-panel-top"><img src="assets/carve/lockup-black.svg" alt="Carve"><span class="crumb">Run 018 / Review findings</span><span class="status">QA cleared</span></div>
+            <div class="head3"><div>Field</div><div>Current</div><div>Proposed</div></div>
+            <div class="cx-rf">
+              <div class="fl"><b>Title</b><span>Shopify product title</span></div>
+              <div class="cur">Better Sweater Fleece Vest – New Navy</div>
+              <div class="pro"><span class="tag">Updated</span><br>Men’s Better Sweater® Fleece Vest</div>
+            </div>
+            <div class="cx-rf">
+              <div class="fl"><b>Description</b><span>Shopify product description</span></div>
+              <div class="cur">Our go-to fleece vest for cool-weather layering. Made from recycled polyester…</div>
+              <div class="pro"><span class="tag">Rewritten</span><br>The Better Sweater® Vest earns the hook by the door. Its 10-oz recycled fleece brings warmth to the core, while the full-length zip makes it easy to adjust on the move…</div>
+            </div>
+            <div class="cx-rf">
+              <div class="fl"><b>Q&amp;A · 6 pairs</b><span>Metafield · custom.qa_pairs</span></div>
+              <div class="cur">No buyer questions in the product record.</div>
+              <div class="pro"><span class="tag">Added</span><br>Is it comfortable with a backpack? Offset shoulder seams and flat seams reduce bulk and chafe under straps…</div>
+            </div>
+            <div class="cx-review-foot"><span><b>5 fields selected</b> for this product</span><button class="push" type="button">Push 5 fields to Shopify</button></div>
+          </div>
+        </article>
+
+        <!-- 5 LEARN -->
+        <article class="cx-hiw-scene" data-scene="4">
+          <div class="cx-hiw-scene-time">05 · Ongoing</div>
+          <h3>The next run starts with what the last one taught.</h3>
+          <p>Carve measures what each action did to search visibility, product-page behavior and revenue — then keeps, expands, revises or reverses it, and carries what works forward to the next product.</p>
+          <div class="cx-hiw-panel">
+            <div class="cx-hiw-panel-top"><img src="assets/carve/lockup-black.svg" alt="Carve"><span class="crumb">Performance / Product data</span><span class="status">28-day view</span></div>
+            <div class="cx-learn-strip">
+              <div class="m"><span>Product impressions</span><strong>4.96M</strong><em>+12.6%</em></div>
+              <div class="m"><span>Organic PDP clicks</span><strong>178.6K</strong><em>+9.8%</em></div>
+              <div class="m"><span>Product CTR</span><strong>3.6%</strong><em>+0.2 pp</em></div>
+              <div class="m"><span>Organic revenue</span><strong>$1.08M</strong><em>+14.1%</em></div>
+            </div>
+            <div class="cx-learn-main">
+              <div class="cx-trend">
+                <div class="cx-trend-head"><div><span>Organic product impressions</span><b>Products changed in Run 018</b></div><em>↗ 16.4% after publish</em></div>
+                <div class="cx-trend-chart">
+                  <svg viewBox="0 0 640 160" role="img" aria-label="Impressions rise after a Carve run">
+                    <defs><linearGradient id="cxArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A9542E" stop-opacity=".24"/><stop offset="1" stop-color="#A9542E" stop-opacity="0"/></linearGradient></defs>
+                    <line x1="36" y1="24" x2="628" y2="24" stroke="rgba(26,20,16,.08)"/>
+                    <line x1="36" y1="74" x2="628" y2="74" stroke="rgba(26,20,16,.08)"/>
+                    <line x1="36" y1="124" x2="628" y2="124" stroke="rgba(26,20,16,.08)"/>
+                    <path d="M36 124 C90 118 120 124 165 114 S250 110 300 106 S360 102 402 90 S470 70 520 62 S590 44 628 36 L628 146 L36 146 Z" fill="url(#cxArea)"/>
+                    <path d="M36 124 C90 118 120 124 165 114 S250 110 300 106 S360 102 402 90 S470 70 520 62 S590 44 628 36" fill="none" stroke="#A9542E" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="360" y1="18" x2="360" y2="140" stroke="rgba(26,20,16,.22)" stroke-dasharray="3 3"/>
+                    <text x="368" y="28" fill="rgba(26,20,16,.42)" font-family="JetBrains Mono,monospace" font-size="9">Run 018 published</text>
+                  </svg>
+                </div>
+              </div>
+              <aside class="cx-carry">
+                <span>What Carve carries forward</span>
+                <h5>Decision-first openings earn more relevant clicks on technical layers.</h5>
+                <p>The pattern stays tied to the products, fields and run that produced it — then it’s proven again, product by product.</p>
+                <div class="cx-next">42 next products staged with the winning pattern · Review mode</div>
+              </aside>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div></div></div>
+  </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carve — Product understanding (interactive stage)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family:'Redaction';
+      src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    @font-face {
+      font-family:'Redaction 10';
+      src:url('assets/carve/fonts/redaction-10.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    @font-face {
+      font-family:'Redaction 20';
+      src:url('assets/carve/fonts/redaction-20.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    @font-face {
+      font-family:'Redaction 35';
+      src:url('assets/carve/fonts/redaction-35.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    @font-face {
+      font-family:'Redaction 50';
+      src:url('assets/carve/fonts/redaction-50.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    @font-face {
+      font-family:'Redaction 70';
+      src:url('assets/carve/fonts/redaction-70.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    @font-face {
+      font-family:'Redaction 100';
+      src:url('assets/carve/fonts/redaction-100.otf') format('opentype');
+      font-style:normal; font-weight:400; font-display:swap;
+    }
+    :root {
+      --bg:#F5F0E8;
+      --bg-2:#EDE7DC;
+      --bg-3:#E0D9CE;
+      --bg-4:#D8D0C4;
+      --ink:#1A1410;
+      --ink-2:#5C4F45;
+      --ink-3:#685A50;
+      --accent:#8B4A2C;
+      --accent-h:#7A3D22;
+      --accent-bg:rgba(139,74,44,.10);
+      --positive:#2D6A4F;
+      --positive-bg:rgba(45,106,79,.10);
+      --border:rgba(26,20,16,.09);
+      --border-2:rgba(26,20,16,.16);
+      --serif:'Redaction', Georgia, serif;
+      --sans:'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono:'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing:border-box; }
+    html, body {
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+    }
+    body {
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--sans);
+      -webkit-font-smoothing:antialiased;
+    }
+    /* paper-grain overlay */
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      pointer-events:none;
+      opacity:.035;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:180px 180px;
+    }
+    img { display:block; max-width:100%; }
+    button { color:inherit; font:inherit; }
+    .serif { font-family:var(--serif); font-style:normal; font-weight:400; }
+    .mono { font-family:var(--mono); }
+    .kicker { color:var(--ink-3); font:500 10px/1.4 var(--mono); letter-spacing:.1em; text-transform:uppercase; }
+
+    /* PRODUCT STAGE — fills iframe edge-to-edge (≈1.42:1 landscape) */
+    .product-stage {
+      position:relative;
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      width:100%;
+      height:100%;
+      min-height:0;
+      overflow:hidden;
+      background:var(--bg-2);
+    }
+    .product-canvas { position:relative; min-width:0; overflow:hidden; background:linear-gradient(145deg,#F8F5EF 0%,#E9E1D5 100%); }
+    .product-canvas::after { content:""; position:absolute; left:15%; right:-35%; bottom:-33%; height:48%; border-radius:50%; background:rgba(139,74,44,.08); filter:blur(2px); }
+    .catalog-head { position:relative; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:20px 22px; border-bottom:1px solid var(--border); background:rgba(245,240,232,.7); backdrop-filter:blur(8px); }
+    .catalog-brand { display:flex; align-items:center; gap:9px; font-size:13px; font-weight:500; }
+    .catalog-brand img { width:20px; height:20px; filter:drop-shadow(0 4px 7px rgba(93,37,17,.22)); }
+    .catalog-view { color:var(--ink-3); font:400 10px/1 var(--mono); letter-spacing:.05em; text-transform:uppercase; }
+    .featured-visual { position:absolute; z-index:1; inset:64px 0 158px; display:grid; place-items:center; }
+    .featured-visual img { width:82%; height:92%; object-fit:contain; transition:opacity .22s ease,transform .55s cubic-bezier(.16,1,.3,1); filter:drop-shadow(0 24px 30px rgba(26,20,16,.15)); }
+    .featured-visual.swapping img { opacity:0; transform:translateY(8px) scale(.97); }
+    .product-rail { position:absolute; z-index:5; left:18px; top:88px; display:grid; gap:9px; }
+    .commerce-product { position:relative; width:58px; height:58px; padding:0; overflow:hidden; border:1px solid rgba(26,20,16,.11); border-radius:10px; background:rgba(245,240,232,.84); cursor:pointer; transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease; }
+    .commerce-product:hover { transform:translateX(2px); }
+    .commerce-product.active { border-color:var(--accent); box-shadow:0 6px 18px rgba(26,20,16,.13); }
+    .commerce-image { width:100%; height:100%; }
+    .commerce-image img { width:100%; height:100%; object-fit:contain; padding:8px; }
+    .commerce-select { position:absolute; right:4px; top:4px; width:13px; height:13px; display:grid; place-items:center; border-radius:50%; background:var(--accent); color:var(--bg); font-size:7px; opacity:0; }
+    .commerce-product.active .commerce-select { opacity:1; }
+    .featured-meta { position:absolute; z-index:4; left:0; right:0; bottom:0; min-height:158px; padding:26px 26px 24px; border-top:1px solid var(--border); background:rgba(245,240,232,.82); backdrop-filter:blur(10px); }
+    .featured-brand { color:var(--ink-3); font:500 10px/1.3 var(--mono); letter-spacing:.07em; text-transform:uppercase; }
+    .featured-meta h3 { margin:9px 0 10px; font-size:22px; font-weight:500; line-height:1.17; }
+    .featured-meta-row { display:flex; align-items:center; justify-content:space-between; gap:10px; color:var(--ink-2); font-size:11.5px; }
+    .featured-proof { color:var(--positive); font:500 11px/1 var(--mono); white-space:nowrap; }
+    .reason-stream { position:relative; display:flex; min-width:0; flex-direction:column; overflow:hidden; background:var(--ink); color:var(--bg); }
+    .reason-stream::before { content:""; position:absolute; inset:0; background:linear-gradient(105deg,transparent 30%,rgba(245,240,232,.06) 48%,transparent 66%); transform:translateX(-100%); animation:catalog-scan 4.8s ease-in-out infinite; }
+    .stream-head { position:relative; display:flex; align-items:center; gap:11px; padding:24px 26px 20px; border-bottom:1px solid rgba(245,240,232,.1); }
+    .stream-head img { width:34px; height:34px; }
+    .stream-head div { min-width:0; }
+    .stream-head small { display:block; color:rgba(245,240,232,.78); font:400 10px/1.2 var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+    .stream-head strong { display:block; overflow:hidden; margin-top:4px; font-size:14px; font-weight:500; white-space:nowrap; text-overflow:ellipsis; }
+    .stream-status { margin-left:auto; color:#A7D9BC; font:500 10px/1 var(--mono); text-transform:uppercase; white-space:nowrap; }
+    .reason-pipeline { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:7px; padding:20px 24px; border-bottom:1px solid rgba(245,240,232,.08); }
+    .reason-step { position:relative; overflow:hidden; padding:13px; border:1px solid rgba(245,240,232,.14); border-radius:7px; background:rgba(245,240,232,.035); color:rgba(245,240,232,.78); font:400 11px/1.3 var(--mono); text-align:left; cursor:pointer; transition:.2s ease; }
+    .reason-step:hover { color:rgba(245,240,232,.92); background:rgba(245,240,232,.07); }
+    .reason-step.active { border-color:rgba(214,184,154,.42); background:rgba(214,184,154,.1); color:#E7CFB8; }
+    .reason-step.active::after { content:""; position:absolute; left:0; bottom:0; width:100%; height:1px; background:#D6B89A; transform-origin:left; animation:reason-progress 3.8s linear both; }
+    .stream-read { position:relative; display:flex; flex:1; flex-direction:column; justify-content:center; padding:34px 30px 30px; }
+    .stream-read strong { display:block; color:var(--bg); font:300 italic 34px/1.04 var(--serif); letter-spacing:-.02em; }
+    .stream-read p { margin:17px 0 22px; color:rgba(245,240,232,.78); font-size:14px; line-height:1.62; }
+    .stream-facts { display:flex; flex-wrap:wrap; gap:7px; }
+    .stream-facts span { padding:7px 10px; border:1px solid rgba(245,240,232,.2); border-radius:999px; color:#E0C2A5; font:400 11px/1 var(--mono); }
+    @keyframes catalog-scan { 0%,28%{transform:translateX(-100%)} 70%,100%{transform:translateX(100%)} }
+    @keyframes reason-progress { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reason-stream::before { animation:none; }
+      .reason-step.active::after { animation:none; transform:scaleX(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="product-stage" aria-label="Carve understanding real products">
+    <div class="product-canvas">
+      <div class="catalog-head">
+        <div class="catalog-brand"><img src="assets/carve/shopify.svg" alt="">Live product</div>
+        <div class="catalog-view">Click a product</div>
+      </div>
+      <div class="featured-visual" id="featured-visual"><img id="featured-image" src="assets/carve/patagonia-better-sweater-vest-cutout.png" alt="Front view of a sleeveless navy knit-fleece vest with a stand collar, full-length black zipper, vertical zip chest pocket, two zip hand pockets and a small Patagonia chest patch."></div>
+      <div class="product-rail" role="list" aria-label="Public product demonstrations">
+        <button class="commerce-product active" role="listitem" aria-label="Understand Patagonia Better Sweater Fleece Vest" data-product-key="patagonia"><span class="commerce-image"><img src="assets/carve/patagonia-better-sweater-vest-cutout.png" alt=""><span class="commerce-select">✓</span></span></button>
+        <button class="commerce-product" role="listitem" aria-label="Understand Aesop Blue Chamomile Facial Hydrating Masque" data-product-key="aesop"><span class="commerce-image"><img src="assets/carve/aesop-blue-chamomile-cutout.png" alt=""><span class="commerce-select">✓</span></span></button>
+        <button class="commerce-product" role="listitem" aria-label="Understand On Cloudmonster 2" data-product-key="on"><span class="commerce-image"><img src="assets/carve/on-cloudmonster-2.webp" alt=""><span class="commerce-select">✓</span></span></button>
+      </div>
+      <div class="featured-meta">
+        <div class="featured-brand" id="featured-brand">Patagonia · Men’s fleece vest</div>
+        <h3 id="featured-name">Men’s Better Sweater® Fleece Vest</h3>
+        <div class="featured-meta-row"><span id="featured-variant">New Navy · Regular fit</span><span class="featured-proof" id="featured-proof">★ 4.8 · 516 reviews</span></div>
+      </div>
+    </div>
+    <div class="reason-stream" aria-live="polite">
+      <div class="stream-head">
+        <img src="assets/carve/orb-64.png" alt="">
+        <div><small>Carve understands</small><strong id="stream-product">Patagonia Better Sweater® Fleece Vest</strong></div>
+        <span class="stream-status">Research checked</span>
+      </div>
+      <div class="reason-pipeline" role="tablist" aria-label="Explore Carve's reasoning stages">
+        <button class="reason-step active" data-stage="product">Product truth</button>
+        <button class="reason-step" data-stage="brand">Brand character</button>
+        <button class="reason-step" data-stage="buyer">Buyer feeling</button>
+        <button class="reason-step" data-stage="decision">Why they choose it</button>
+      </div>
+      <div class="stream-read">
+        <strong id="stream-stage-title">A layer designed to stay useful.</strong>
+        <p id="stream-insight">Warm recycled fleece, a quietly refined sweater-knit face, pack-friendly seams and secure storage make this an everyday layer—not a seasonal novelty.</p>
+        <div class="stream-facts" id="stream-facts"><span>100% recycled body fabric</span><span>394 g</span><span>3 secure pockets</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const productResearch = {
+      patagonia: {
+        name: 'Patagonia Better Sweater® Fleece Vest',
+        image: 'assets/carve/patagonia-better-sweater-vest-cutout.png',
+        alt: 'Front view of a sleeveless navy knit-fleece vest with a stand collar, full-length black zipper, vertical zip chest pocket, two zip hand pockets and a small Patagonia chest patch.',
+        brand: 'Patagonia · Men’s fleece vest',
+        title: 'Men’s Better Sweater® Fleece Vest',
+        variant: 'New Navy · Regular fit',
+        proof: '★ 4.8 · 516 reviews',
+        stages: {
+          product: { title: 'A layer designed to stay useful.', text: 'Warm recycled fleece, a quietly refined sweater-knit face, pack-friendly seams and secure storage make this an everyday layer built for many seasons.', facts: ['100% recycled body fabric', '394 g', '3 secure pockets'] },
+          brand: { title: 'Patagonia makes restraint feel valuable.', text: 'The design stays quiet and practical. Credibility comes from lower-impact materials, a Fair Trade Certified™ factory, easy care and construction made for repeat wear.', facts: ['Lower-impact dyeing', 'bluesign® approved', 'Fair Trade Certified™'] },
+          buyer: { title: 'They would rather own the right layer than another layer.', text: 'They buy fewer, better things. They want to feel prepared for a cold trailhead, a travel day or a casual meeting without looking over-equipped or overly styled.', facts: ['Fewer, better layers', 'Quietly capable', 'Trail → travel → weekday'] },
+          decision: { title: 'The layer has to earn its place.', text: 'Timeless shape, warm fleece, pack comfort and environmental proof make its versatility believable. It feels considered precisely because nothing about it tries too hard.', facts: ['Understated by design', '4.8 from 516 reviews', 'Care extends the rotation'] }
+        }
+      },
+      aesop: {
+        name: 'Aesop Blue Chamomile Facial Hydrating Masque',
+        image: 'assets/carve/aesop-blue-chamomile-cutout.png',
+        alt: 'Upright white crinkled skincare tube with black Aesop lettering, dense black-and-white label copy and a wide black flip cap.',
+        brand: 'Aesop · Skin care',
+        title: 'Blue Chamomile Facial Hydrating Masque',
+        variant: '60 mL · Once or twice weekly',
+        proof: 'Long-haul companion',
+        stages: {
+          product: { title: 'Hydration no one else has to see.', text: 'A lightweight aqueous gel masque that refreshes dry, travel-worn skin for 30 minutes or overnight, then leaves a transparent, dewy finish.', facts: ['Transparent finish', '30 min → overnight', '60 mL'] },
+          brand: { title: 'Aesop turns efficacy into a private ritual.', text: 'A fresh herbaceous-floral aroma, elegant gel texture, measured instructions and a transparent finish make the product feel precise, sensory and discreet.', facts: ['Measured usage', 'Sensory detail', 'Quietly distinctive'] },
+          buyer: { title: 'They want to arrive feeling like themselves.', text: 'They know the tight, tired feeling cabin air leaves behind. They want real replenishment without a visible sheet mask or a ten-step ritual in an airplane bathroom.', facts: ['Dry, tired skin', 'Frequent travellers', 'Private little ritual'] },
+          decision: { title: 'Discretion is part of the luxury.', text: 'Flexible wear time, a transparent finish and an in-flight use case turn serious hydration into an elegant ritual they can actually live with.', facts: ['Niacinamide + bisabolol', 'One teaspoon', 'Long-haul use'] }
+        }
+      },
+      on: {
+        name: 'On Cloudmonster 2',
+        image: 'assets/carve/on-cloudmonster-2.webp',
+        alt: 'On Cloudmonster 2 road-running shoe in black',
+        brand: 'On · Road running',
+        title: 'Cloudmonster 2',
+        variant: 'Black / Black · 300 g',
+        proof: 'Training + uptempo',
+        stages: {
+          product: { title: 'Big protection. Still wants to move.', text: 'On’s biggest CloudTec® pairs softer landings with a forefoot rocker and Speedboard® that keeps a max-cushioned shoe rolling forward.', facts: ['Max CloudTec®', '6 mm drop', 'Forward-rolling ride'] },
+          brand: { title: 'On makes the engineering visible—and energetic.', text: 'The oversized CloudTec® silhouette and playful Cloudmonster name turn technical performance into something optimistic. The shoe should look as alive as the ride feels.', facts: ['Visible technology', 'Swiss engineering', 'Playful performance'] },
+          buyer: { title: 'For the runner who hates choosing between easy and alive.', text: 'They have real miles to cover, but a recovery shoe that feels flat drains the joy out of them. They want protection for the long run and enough rhythm to lift the pace when the body says go.', facts: ['Miles on the calendar', 'Protection, not mush', 'Easy → uptempo'] },
+          decision: { title: 'The feeling is the feature.', text: 'Dual-density Helion™ softens the landing; the nylon-blend Speedboard® and forefoot rocker turn that protection into a rhythmic, predictable transition.', facts: ['Dual-density bounce', 'Rhythmic daily miles', 'Easy → uptempo'] }
+        }
+      }
+    };
+
+    const commerceProducts = [...document.querySelectorAll('.commerce-product')];
+    const reasonSteps = [...document.querySelectorAll('.reason-step')];
+    const streamProduct = document.getElementById('stream-product');
+    const streamStageTitle = document.getElementById('stream-stage-title');
+    const streamInsight = document.getElementById('stream-insight');
+    const streamFacts = document.getElementById('stream-facts');
+    const featuredVisual = document.getElementById('featured-visual');
+    const featuredImage = document.getElementById('featured-image');
+    const featuredBrand = document.getElementById('featured-brand');
+    const featuredName = document.getElementById('featured-name');
+    const featuredVariant = document.getElementById('featured-variant');
+    const featuredProof = document.getElementById('featured-proof');
+    let activeProduct = 0;
+    let activeStage = 'product';
+    let productTimer;
+    let productResumeTimer;
+    let featuredSwapTimer;
+    const stageOrder = ['product', 'brand', 'buyer', 'decision'];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function renderFeaturedProduct(product) {
+      featuredVisual.classList.add('swapping');
+      clearTimeout(featuredSwapTimer);
+      featuredSwapTimer = setTimeout(() => {
+        featuredImage.src = product.image;
+        featuredImage.alt = product.alt;
+        featuredBrand.textContent = product.brand;
+        featuredName.textContent = product.title;
+        featuredVariant.textContent = product.variant;
+        featuredProof.textContent = product.proof;
+        requestAnimationFrame(() => featuredVisual.classList.remove('swapping'));
+      }, 120);
+    }
+
+    function renderReasoning() {
+      const key = commerceProducts[activeProduct].dataset.productKey;
+      const product = productResearch[key];
+      const stage = product.stages[activeStage];
+      streamProduct.textContent = product.name;
+      streamStageTitle.textContent = stage.title;
+      streamInsight.textContent = stage.text;
+      streamFacts.innerHTML = stage.facts.map(fact => `<span>${fact}</span>`).join('');
+      reasonSteps.forEach(step => {
+        const selected = step.dataset.stage === activeStage;
+        step.classList.toggle('active', selected);
+        step.setAttribute('aria-selected', String(selected));
+      });
+    }
+
+    function selectCommerceProduct(index) {
+      activeProduct = index;
+      commerceProducts.forEach((product, productIndex) => {
+        const selected = productIndex === index;
+        product.classList.toggle('active', selected);
+        product.setAttribute('aria-pressed', String(selected));
+      });
+      renderFeaturedProduct(productResearch[commerceProducts[index].dataset.productKey]);
+      renderReasoning();
+    }
+
+    function advanceHeroStory() {
+      const stageIndex = stageOrder.indexOf(activeStage);
+      if (stageIndex < stageOrder.length - 1) {
+        activeStage = stageOrder[stageIndex + 1];
+        renderReasoning();
+        return;
+      }
+      activeStage = 'product';
+      selectCommerceProduct((activeProduct + 1) % commerceProducts.length);
+    }
+
+    function startHeroStory() {
+      clearInterval(productTimer);
+      if (reduceMotion) return;
+      productTimer = setInterval(advanceHeroStory, 3800);
+    }
+
+    function pauseHeroStory() {
+      clearInterval(productTimer);
+      clearTimeout(productResumeTimer);
+      if (!reduceMotion) productResumeTimer = setTimeout(startHeroStory, 14000);
+    }
+
+    commerceProducts.forEach((product, index) => product.addEventListener('click', () => {
+      activeStage = 'product';
+      selectCommerceProduct(index);
+      pauseHeroStory();
+    }));
+    reasonSteps.forEach(step => step.addEventListener('click', () => {
+      activeStage = step.dataset.stage;
+      renderReasoning();
+      pauseHeroStory();
+    }));
+
+    startHeroStory();
+  </script>
+</body>
+</html>

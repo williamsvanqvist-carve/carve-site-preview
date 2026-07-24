@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400;font-display:swap}
+:root{--paper:#F5F0E8;--card:#FBF8F2;--card-2:#F1E9DB;--ink:#1A1410;--ink-2:#5C4F45;--ink-3:#8A7B6D;
+  --terra:#A9542E;--terra-dk:#7E3D25;--terra-soft:#EAD8C6;--green:#2F6A4F;--green-soft:#E0EBE3;
+  --line:rgba(26,20,16,.10);--line-2:rgba(26,20,16,.17);
+  --serif:'Redaction',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;}
+*{box-sizing:border-box;margin:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;justify-content:center;padding:0 48px}
+.shell{width:min(100%,1200px);margin:0 auto}
+
+.head{max-width:820px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--terra);font:500 12.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase}
+.eyebrow::before{content:"";width:24px;height:1px;background:var(--terra)}
+.head h2{margin:20px 0 0;font:400 italic clamp(36px,4vw,52px)/1.02 var(--serif);letter-spacing:-.026em}
+.head .lede{margin:18px 0 0;max-width:600px;color:var(--ink-2);font-size:18px;line-height:1.6}
+
+.showcase{display:grid;grid-template-columns:.92fr 1.08fr;gap:44px;align-items:stretch;margin-top:48px}
+
+/* media */
+.media{position:relative;min-height:440px;border:1px solid var(--line-2);border-radius:22px;overflow:hidden;
+  background:radial-gradient(circle at 50% 42%,rgba(169,84,46,.13),transparent 46%),linear-gradient(150deg,#F3EBDD,#FBF8F2 55%,#EFE5D6);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 28px 70px rgba(60,35,15,.10)}
+.media-bar{position:absolute;top:0;left:0;right:0;height:46px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(251,248,242,.72);backdrop-filter:blur(6px);z-index:3}
+.media-bar img{height:16px;width:16px;object-fit:contain}
+.media-bar b{font-size:11.5px;font-weight:500}
+.media-bar .live{margin-left:auto;color:var(--green);font:500 10px/1 var(--mono);text-transform:uppercase;display:inline-flex;align-items:center;gap:7px}
+.media-bar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.media-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:60px 30px 40px}
+#story-img{max-width:80%;max-height:290px;object-fit:contain;filter:drop-shadow(0 26px 34px rgba(28,22,18,.22));transition:opacity .5s ease,transform .6s cubic-bezier(.2,.75,.2,1)}
+.media.swapping #story-img{opacity:0;transform:translateY(14px) scale(.98)}
+.media-foot{position:absolute;left:20px;bottom:18px;z-index:3;max-width:60%}
+.media-foot .brand{color:var(--terra);font:500 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase}
+.media-foot .name{margin-top:7px;font:400 17px/1.15 var(--serif)}
+.media-count{position:absolute;right:20px;bottom:18px;z-index:3;color:var(--ink-3);font:500 11px/1 var(--mono)}
+
+/* point of view */
+.pov{display:flex;flex-direction:column;min-width:0}
+.pov .brandcat{color:var(--ink-3);font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.pov h3{margin:12px 0 0;font:400 italic clamp(26px,2.7vw,36px)/1.06 var(--serif);letter-spacing:-.02em;min-height:1.15em;transition:opacity .45s ease}
+.pov .chips{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 20px}
+.pov .chips span{padding:6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink-2);font:400 11px/1 var(--mono)}
+.model{border-top:1px solid var(--line-2)}
+.model-row{display:grid;grid-template-columns:74px 1fr auto;gap:16px;align-items:start;padding:13px 0;border-bottom:1px solid var(--line);transition:opacity .45s ease}
+.model-row label{color:var(--ink-3);font:500 10px/1.4 var(--mono);letter-spacing:.05em;text-transform:uppercase;padding-top:2px}
+.model-row p{color:var(--ink);font-size:14px;line-height:1.5;min-width:0}
+.model-row .tag{color:var(--green);font:500 9.5px/1 var(--mono);text-transform:uppercase;white-space:nowrap;padding-top:3px;display:inline-flex;align-items:center;gap:6px}
+.model-row .tag::before{content:"✓";font-size:10px}
+.pov .source{margin-top:18px;color:var(--terra);font:500 11px/1 var(--mono);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.pov .source::after{content:"→"}
+
+/* tabs */
+.tabs{display:flex;gap:10px;margin-top:34px}
+.tab{flex:1;position:relative;padding:15px 18px 16px;border:1px solid var(--line-2);border-radius:14px;background:var(--card);cursor:pointer;text-align:left;overflow:hidden;transition:border-color .25s ease,background .25s ease}
+.tab:hover{border-color:var(--ink-3)}
+.tab.active{border-color:var(--terra);background:linear-gradient(180deg,rgba(234,209,193,.5),var(--card))}
+.tab .t-brand{font:600 12.5px/1 var(--sans)}
+.tab .t-cat{margin-top:5px;color:var(--ink-3);font:400 10.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.tab .t-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--terra)}
+.tab.active .t-prog{animation:prog 6s linear forwards}
+@keyframes prog{from{width:0}to{width:100%}}
+
+@media(max-width:920px){
+  body{padding:0 26px}
+  .showcase{grid-template-columns:1fr;gap:26px}
+  .media{min-height:340px}
+  .model-row{grid-template-columns:64px 1fr;gap:10px}
+  .model-row .tag{grid-column:2;padding-top:0}
+  .tabs{flex-direction:column}
+}
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div class="head">
+      <span class="eyebrow">Product stories</span>
+      <h2>A product is also a point of view.</h2>
+      <p class="lede">Material facts become commerce when Carve reads them through the brand, the buyer and the life the product belongs in.</p>
+    </div>
+
+    <div class="showcase">
+      <div class="media" id="media">
+        <div class="media-bar"><img src="assets/carve/orb-32.png" alt=""><b>Product understanding</b><span class="live">Live model</span></div>
+        <div class="media-stage"><img id="story-img" src="assets/carve/aesop-blue-chamomile-cutout.png" alt="Product"></div>
+        <div class="media-foot"><div class="brand" id="m-brand">Aesop · Skin care</div><div class="name" id="m-name">Blue Chamomile Masque</div></div>
+        <div class="media-count" id="m-count">01 / 03</div>
+      </div>
+
+      <div class="pov">
+        <div class="brandcat" id="p-brandcat">Aesop · Skin care</div>
+        <h3 id="p-headline">Land looking like you slept.</h3>
+        <div class="chips" id="p-chips"></div>
+        <div class="model" id="p-model"></div>
+        <a class="source" id="p-source" href="#" target="_blank" rel="noreferrer">Official product source · public demo</a>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+<script>
+(function(){
+  var STORIES=[
+    { key:"aesop", img:"assets/carve/aesop-blue-chamomile-cutout.png", brandcat:"Aesop · Skin care", name:"Blue Chamomile Masque",
+      headline:"Land looking like you slept.", chips:["60 mL","Dry / dehydrated skin","Weekly use"],
+      source:"https://www.aesop.com/uk/p/skin/treat-masque/blue-chamomile-facial-hydrating-masque/",
+      reads:[
+        ["Product","A discreet, transparent gel masque that travels from takeoff to morning.","Checked"],
+        ["Brand","Precise, sensory and discreet — Aesop makes the ritual feel considered.","Learned"],
+        ["Buyer","Someone who wants to arrive feeling like themselves after hours of cabin air.","Mapped"],
+        ["Decision","Serious hydration wins when it becomes an easy, private travel ritual.","Modeled"]
+      ]},
+    { key:"muuto", img:"assets/carve/muuto-outline-sofa-cognac-cutout-wide.png", brandcat:"Muuto · Living", name:"Outline Sofa 3-Seater",
+      headline:"A quiet outline. A generous seat.", chips:["220 cm","Cognac leather","3-seater"],
+      source:"https://www.muuto.com/product/Outline-Sofa-3-Seater-p9413/p9413/",
+      reads:[
+        ["Product","A 220 cm sofa: slim architectural exterior, deep 62 cm seat, cognac Refine Leather.","Checked"],
+        ["Brand","Muuto reworks 1960s Scandinavian calm through proportion, not decoration.","Learned"],
+        ["Buyer","Furnishing a considered room; wants serious lounging without a dominating sofa.","Mapped"],
+        ["Decision","Deep comfort inside a visually light outline — the balance is the point.","Modeled"]
+      ]},
+    { key:"on", img:"assets/carve/on-cloudmonster-2.webp", brandcat:"On · Running", name:"Cloudmonster 2",
+      headline:"Find your rhythm — and keep it.", chips:["300 g","6 mm drop","Road"],
+      source:"https://www.on.com/en-se/products/cloudmonster-2-m-3me1012/mens/",
+      reads:[
+        ["Product","A 300 g road shoe: max CloudTec® cushioning, 6 mm drop, dual-density Helion™, Speedboard®.","Checked"],
+        ["Brand","On makes the engineering visible and energetic — a ride with personality.","Learned"],
+        ["Buyer","A runner with real miles who hates when a protective shoe feels flat.","Mapped"],
+        ["Decision","Soft landings for the long run, with enough life to lift the pace.","Modeled"]
+      ]}
+  ];
+
+  var media=document.getElementById("media"), img=document.getElementById("story-img");
+  var mBrand=document.getElementById("m-brand"), mName=document.getElementById("m-name"), mCount=document.getElementById("m-count");
+  var pBrandcat=document.getElementById("p-brandcat"), pHead=document.getElementById("p-headline"),
+      pChips=document.getElementById("p-chips"), pModel=document.getElementById("p-model"), pSource=document.getElementById("p-source");
+  var tabsEl=document.getElementById("tabs");
+  var idx=0, timer=null;
+
+  STORIES.forEach(function(s,i){
+    var parts=s.brandcat.split(" · ");
+    var t=document.createElement("button"); t.className="tab"+(i===0?" active":"");
+    t.innerHTML='<div class="t-brand">'+parts[0]+'</div><div class="t-cat">'+parts[1]+'</div><span class="t-prog"></span>';
+    t.addEventListener("click",function(){ go(i,true); });
+    tabsEl.appendChild(t);
+  });
+  var tabs=[].slice.call(tabsEl.children);
+
+  function pad(n){ return (n<10?"0":"")+n; }
+  function render(s){
+    mBrand.textContent=s.brandcat; mName.textContent=s.name;
+    mCount.textContent=pad(idx+1)+" / "+pad(STORIES.length);
+    pBrandcat.textContent=s.brandcat; pHead.textContent=s.headline;
+    pChips.innerHTML=s.chips.map(function(c){return "<span>"+c+"</span>";}).join("");
+    pModel.innerHTML=s.reads.map(function(r){return '<div class="model-row"><label>'+r[0]+'</label><p>'+r[1]+'</p><span class="tag">'+r[2]+'</span></div>';}).join("");
+    pSource.href=s.source;
+  }
+  function go(i,manual){
+    idx=(i+STORIES.length)%STORIES.length;
+    var s=STORIES[idx];
+    media.classList.add("swapping"); pHead.style.opacity="0"; pModel.style.opacity="0";
+    setTimeout(function(){
+      img.src=s.img; render(s);
+      media.classList.remove("swapping"); pHead.style.opacity="1"; pModel.style.opacity="1";
+    },260);
+    tabs.forEach(function(t,j){ t.classList.remove("active"); void t.querySelector(".t-prog").offsetWidth; if(j===idx) t.classList.add("active"); });
+    if(manual) restart();
+  }
+  function restart(){ clearInterval(timer); timer=setInterval(function(){ go(idx+1,false); },6000); }
+
+  render(STORIES[0]); restart();
+})();
+</script>
+<script>
+/* Auto-height. These band pages are flex-centred at height:100%, so any measurement taken as-is
+   just mirrors the frame — and growing the frame would grow the "content" in a feedback loop.
+   Briefly release the height, measure the NATURAL content, restore, then report it up. */
+(function(){
+  var last=0;
+  function report(){
+    var de=document.documentElement, b=document.body;
+    var dh=de.style.height, bh=b.style.height, ov=b.style.overflow;
+    de.style.height="auto"; b.style.height="auto"; b.style.overflow="visible";
+    var h=Math.ceil(b.scrollHeight)+110;
+    de.style.height=dh; b.style.height=bh; b.style.overflow=ov;
+    if(Math.abs(h-last)<4) return; last=h;
+    parent.postMessage({carveHeight:h, carveSrc:location.pathname},"*");
+  }
+  addEventListener("load",report); addEventListener("resize",report);
+  setTimeout(report,300); setTimeout(report,1000);
+})();
+</script>
+</body>
+</html>

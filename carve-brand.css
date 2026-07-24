@@ -1,0 +1,41 @@
+/* CARVE-BRAND — only colors + fonts. Structure/gradients/animations untouched. */
+@font-face{font-family:'Redaction';src:url('/assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400;font-display:swap}
+
+/* Recolor Framer's tokens → warm Carve palette. Gradients keep their structure,
+   only the color stops shift (blue→terracotta, black→warm ink, #fafafa→parchment). */
+:root, body, .framer-tCkLZ, [class*="framer-"] {
+  --token-2fff15bb-ff03-4be0-b411-84fc3e904ebe: #8B4A2C !important; /* blue accent / hero glow → terracotta */
+  --token-c0761ab1-25bd-4204-83b1-4f57026402d8: #1A1410 !important; /* black gradient stop → warm ink */
+  --token-e76ef4d7-86a8-4e95-9f02-b600ebf53689: #F5F0E8 !important; /* #fafafa page bg → parchment */
+  --token-5b6e9855-0676-467a-b03f-1c89f97ea96a: #EAD9C0 !important; /* #b2ddff light-blue stop → warm beige */
+  --token-364cd2bd-33d3-4810-a57a-85ff8809396f: #B0703F !important; /* #53b1fd → mid terracotta */
+  --token-ad919020-077f-486d-8889-505a9e10c830: #CBA079 !important; /* #84caff → light terracotta */
+  --token-f8775b65-dc63-4a94-a13b-2b5f3e8d5491: #EFE2CF !important; /* #d1e9ff → warm tint */
+  --token-a878fd77-ac33-4fff-9ee2-de368d2b2a2a: #F7F0E6 !important; /* #eff8ff → warm tint */
+  --token-416d690b-11bc-46f9-b588-7ff2218575a1: #8B4A2C !important; /* #9e77ed violet chip → terracotta */
+  --token-29e156b0-61d5-486d-a6e2-b202f3b383d1: #A8643C !important; /* #9b8afb violet → warm */
+}
+
+/* Fonts: Redaction on all display headings */
+#main h1, #main h2 { font-family: 'Redaction', Georgia, serif !important; letter-spacing: -0.015em; font-weight: 400 !important; }
+
+/* Fix: rolling-text button labels lost their coloured spans (JS textContent swap) and were
+   inheriting the anchor's UA link-blue (#0000EE). Restore each button's intended --text colour
+   (light on dark/terracotta buttons, dark on light buttons — already set per button by Framer). */
+[class*="rolling-text-inner"] { color: var(--text, #1A1410) !important; }
+
+/* ---- Anti-flash: hide removed/replaced sections in CSS, not JS ----
+   Framer's SSR HTML paints before React hydrates, and hydration rebuilds the DOM from the
+   bundle — so anything removed with JS reappears for a frame. CSS isn't part of React's DOM
+   diff, so it applies on first paint and survives hydration. These attribute selectors exist
+   in both the SSR snapshot and the hydrated tree, so the sections never flash. */
+[data-framer-name="How It Works Container"],   /* replaced by the native pinned walkthrough */
+[data-framer-name="Testimonial Container"],    /* replaced by the 90-day guarantee band */
+[data-framer-name="CTA Container"],            /* removed */
+[data-framer-name="Founder's Note Container"]  /* removed */
+{ display: none !important; }
+
+/* Nav logo: hide the template wordmark only once our real lockup is in place, so a failed
+   injection can never leave the header logo-less. */
+a:has(> .carve-lockup) [data-framer-name="Logotype"],
+a:has(> .carve-lockup) > div[data-framer-component-type="SVG"] { display: none !important; }
