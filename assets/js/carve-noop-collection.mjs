@@ -1,4 +1,7 @@
-/* Stub for CMS collection chunks that aren't part of this static export (they 404'd and logged
-   "Failed to import collection module"). The site uses no Framer CMS content. */
-export const utils = {};
+/* Stub for CMS collection chunks that aren't part of this static export. The homepage has no
+   collection route, but Framer still asks these helpers while resolving its dormant blog links. */
+export const utils = {
+  getSlugByRecordId: () => undefined,
+  getRecordIdBySlug: () => undefined,
+};
 export default { utils };

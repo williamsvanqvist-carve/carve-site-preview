@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>90-day guarantee — Carve</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
   @font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400}
   :root{--bg:#F5F0E8;--bg-2:#EDE7DC;--panel:#FBF9F5;--ink:#1A1410;--ink-2:#5C4F45;--ink-3:#857567;
@@ -24,33 +26,60 @@
   .g p b{color:var(--ink);font-weight:500}
   .refund{display:inline-flex;align-items:center;gap:12px;margin:26px 0 22px;padding:14px 20px;border:1px solid var(--positive-bd);border-radius:999px;background:var(--positive-bg);color:var(--positive);font-size:19px;font-weight:500}
   .refund::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--positive)}
-  .chips{display:flex;flex-wrap:wrap;gap:10px}
-  .chips span{padding:10px 15px;border:1px solid var(--border-2);border-radius:999px;color:var(--ink-2);font:400 14px/1 var(--mono)}
-  /* right — stats */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}
+  .chips li{padding:10px 15px;border:1px solid var(--border-2);border-radius:999px;color:var(--ink-2);font:400 14px/1.3 var(--mono)}
+  /* right — measurement */
   .s{padding:46px 50px;display:flex;flex-direction:column;justify-content:center;gap:22px;background:linear-gradient(160deg,#F8F5EF,#EBE3D6)}
   .s-lbl{color:var(--ink-3);font:500 13px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;margin-bottom:2px}
-  .stat{padding-bottom:22px;border-bottom:1px solid var(--border)}
+  .stats{list-style:none;padding:0}
+  .stat{padding:22px 0;border-bottom:1px solid var(--border)}
+  .stat:first-child{padding-top:0}
   .stat:last-child{border-bottom:0;padding-bottom:0}
-  .stat b{display:block;font:400 46px/1 var(--serif);color:var(--accent);letter-spacing:-.02em}
+  .stat strong{display:block;font:400 46px/1 var(--serif);color:var(--accent);letter-spacing:-.02em}
   .stat span{display:block;margin-top:9px;color:var(--ink-2);font-size:16.5px;line-height:1.45;max-width:400px}
+
+  @media(max-width:900px){
+    body{align-items:flex-start}
+    .wrap{height:auto;grid-template-columns:1fr}
+    .g{padding:48px 42px;border-right:0;border-bottom:1px solid var(--border)}
+    .s{padding:42px}
+  }
+  @media(max-width:560px){
+    .wrap{border-radius:16px}
+    .g{padding:34px 24px}
+    .eyebrow{font-size:11.5px;line-height:1.3}
+    .g h2{margin-top:18px;font-size:39px;line-height:1.05}
+    .g p{font-size:16.5px;line-height:1.55}
+    .refund{width:fit-content;max-width:100%;margin:22px 0 18px;padding:12px 14px;border-radius:16px;font-size:16px;line-height:1.35}
+    .refund::before{flex:0 0 auto}
+    .chips{gap:8px}
+    .chips li{max-width:100%;padding:8px 11px;font-size:11.5px;line-height:1.4}
+    .s{padding:32px 24px;gap:18px}
+    .s-lbl{font-size:11px;line-height:1.3}
+    .stat{padding:18px 0}
+    .stat strong{font-size:39px}
+    .stat span{font-size:15px}
+  }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="g">
+  <main class="wrap" aria-labelledby="guarantee-title">
+    <section class="g">
       <span class="eyebrow">The guarantee</span>
-      <h2>90 days to prove the work.</h2>
+      <h2 id="guarantee-title">90 days to prove the work.</h2>
       <p>Measured in <b>your own data</b> — Search Console and GA4. The metric that matters: <b>organic product traffic</b>. Not prompt volume, not vanity scores.</p>
-      <div class="refund">No growth in 90 days? Full refund.</div>
-      <div class="chips"><span>No clawback</span><span>No hidden setup fees</span><span>Approved changes stay live in Shopify</span></div>
-    </div>
-    <div class="s">
-      <div class="s-lbl">Why it matters now</div>
-      <div class="stat"><b>17%</b><span>of orders are already influenced by AI agents.</span></div>
-      <div class="stat"><b>45%</b><span>of US shoppers research and compare products with AI.</span></div>
-      <div class="stat"><b>70%</b><span>of product data fails basic agent-readiness checks.</span></div>
-    </div>
-  </div>
+      <p class="refund">No growth in 90 days? Full refund.</p>
+      <ul class="chips" aria-label="Guarantee terms"><li>No clawback</li><li>No hidden setup fees</li><li>Approved changes stay live in Shopify</li></ul>
+    </section>
+    <section class="s" aria-labelledby="guarantee-context-title">
+      <h3 class="s-lbl" id="guarantee-context-title">How the guarantee is measured</h3>
+      <ul class="stats">
+        <li class="stat"><strong>Baseline</strong><span>Connected Search Console and GA4 establish today’s organic product traffic.</span></li>
+        <li class="stat"><strong>90 days</strong><span>We track organic product traffic against that baseline while Carve works.</span></li>
+        <li class="stat"><strong>Full refund</strong><span>If organic product traffic does not grow, the plan is refunded.</span></li>
+      </ul>
+    </section>
+  </main>
 <script>
 /* Auto-height. These band pages are flex-centred at height:100%, so any measurement taken as-is
    just mirrors the frame — and growing the frame would grow the "content" in a feedback loop.

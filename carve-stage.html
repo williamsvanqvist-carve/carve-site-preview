@@ -151,6 +151,38 @@
       .reason-stream::before { animation:none; }
       .reason-step.active::after { animation:none; transform:scaleX(1); }
     }
+    /* The hero frame is intentionally compact on phones. Preserve the two-sided product/story
+       composition, but remove secondary chrome and resize every fixed desktop dimension so the
+       interface remains legible instead of being clipped. */
+    @media (max-width:520px) {
+      .product-stage { grid-template-columns:.82fr 1.18fr; }
+      .catalog-head { gap:6px; padding:11px 10px; }
+      .catalog-brand { gap:6px; font-size:10px; }
+      .catalog-brand img { width:16px; height:16px; }
+      .catalog-view { display:none; }
+      .product-rail { left:7px; top:48px; gap:5px; }
+      .commerce-product { width:38px; height:38px; border-radius:7px; }
+      .commerce-image img { padding:5px; }
+      .commerce-select { right:2px; top:2px; width:10px; height:10px; font-size:6px; }
+      .featured-visual { inset:43px 0 91px; }
+      .featured-visual img { width:88%; height:92%; }
+      .featured-meta { min-height:91px; padding:12px 10px 10px; }
+      .featured-brand { font-size:7px; }
+      .featured-meta h3 { margin:5px 0 6px; font-size:13px; line-height:1.12; }
+      .featured-meta-row { align-items:flex-start; flex-direction:column; gap:3px; font-size:8px; }
+      .featured-proof { font-size:7.5px; white-space:normal; }
+      .stream-head { gap:7px; padding:11px 10px; }
+      .stream-head img { width:23px; height:23px; }
+      .stream-head small { font-size:7px; }
+      .stream-head strong { margin-top:3px; font-size:10px; }
+      .stream-status { display:none; }
+      .reason-pipeline { display:none; }
+      .stream-read { justify-content:flex-start; padding:15px 12px 12px; }
+      .stream-read strong { font-size:20px; line-height:1.02; }
+      .stream-read p { margin:9px 0 11px; font-size:9.5px; line-height:1.43; }
+      .stream-facts { gap:4px; }
+      .stream-facts span { padding:4px 6px; font-size:7.5px; }
+    }
   </style>
 </head>
 <body>

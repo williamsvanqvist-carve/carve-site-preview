@@ -1,5 +1,6 @@
 /* CARVE-BRAND — only colors + fonts. Structure/gradients/animations untouched. */
 @font-face{font-family:'Redaction';src:url('./assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400;font-display:swap}
+html, body { background: #1A1410; }
 
 /* Recolor Framer's tokens → warm Carve palette. Gradients keep their structure,
    only the color stops shift (blue→terracotta, black→warm ink, #fafafa→parchment). */
@@ -39,6 +40,39 @@
    injection can never leave the header logo-less. */
 a:has(> .carve-lockup) [data-framer-name="Logotype"],
 a:has(> .carve-lockup) > div[data-framer-component-type="SVG"] { display: none !important; }
+
+/* Keep the wordmark on the true visual centre while the link and CTA groups balance around it. */
+[data-framer-name="Navigations Links and Buttons"] { position: relative !important; }
+.carve-brand-slot {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  z-index: 5 !important;
+}
+@media (min-width: 810px) {
+  [data-framer-name="Navigations Links and Buttons"] > .carve-brand-host {
+    position: absolute !important;
+    left: calc(50% - 2px) !important;
+    top: 50% !important;
+    width: auto !important;
+    height: auto !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 5 !important;
+  }
+}
+/* Framer sizes the mobile dashboard from its desktop aspect ratio and lets the flex item keep
+   that intrinsic width. On a 390 px viewport it becomes ~428 px wide inside a 342 px clip.
+   Give the demo the actual card width and a little extra height for its compact mobile UI. */
+@media (max-width: 520px) {
+  [data-framer-name="Dashboard"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: calc((100vw - 48px) * .88) !important;
+    aspect-ratio: auto !important;
+    flex: 1 1 auto !important;
+  }
+  iframe.carve-stage { width: 100% !important; max-width: 100% !important; }
+}
 
 /* ---- Scroll reveal for our injected sections ----
    Framer's own sections animate in (opacity .001→1, y 32→0, spring damping 80 / stiffness 300).

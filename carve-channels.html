@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where products win — Carve</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
   @font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400}
   :root{--paper:#F5F0E8;--ink:#1A1410;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Redaction',Georgia,serif;
@@ -14,7 +16,8 @@
   body{color:var(--w);font-family:var(--sans);-webkit-font-smoothing:antialiased;
     background:linear-gradient(180deg,#F5F0E8 0%,#CFA678 26%,#A87B4E 50%,#CFA678 74%,#F5F0E8 100%);
     display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 40px}
-  .head{text-align:center;max-width:780px}
+  main{width:100%}
+  .head{margin:0 auto;text-align:center;max-width:780px}
   .head h2{font:400 clamp(38px,4vw,50px)/1.03 var(--serif);letter-spacing:-.025em}
   .head p{margin:20px auto 0;max-width:610px;color:var(--w7);font-size:19px;line-height:1.6}
   .glass{display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,1180px);margin:64px auto 0;
@@ -34,36 +37,64 @@
   .col p em{font-style:italic;color:#fff}
   .proof{margin-top:auto;display:inline-flex;align-items:center;gap:9px;color:#A7D9BC;font:500 13px/1 var(--mono);letter-spacing:.02em}
   .proof::before{content:"";width:7px;height:7px;border-radius:50%;background:#A7D9BC;box-shadow:0 0 0 4px rgba(167,217,188,.14)}
+
+  @media(max-width:960px){
+    body{padding:56px 32px}
+    .head{max-width:680px}
+    .head p{font-size:18px}
+    .glass{grid-template-columns:1fr;margin-top:46px;max-width:680px}
+    .col{display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:22px;padding:32px;border-right:0;border-bottom:1px solid var(--line)}
+    .col:last-child{border-bottom:0}
+    .ico{grid-row:1 / span 4;margin-bottom:0}
+    .eyebrow,.col h3,.col p,.proof{grid-column:2}
+    .col h3{margin-top:11px}
+    .col p{margin-bottom:20px}
+  }
+  @media(max-width:560px){
+    body{padding:48px 18px}
+    .head h2{font-size:36px;line-height:1.06}
+    .head p{margin-top:16px;font-size:16.5px;line-height:1.55}
+    .glass{margin-top:36px;border-radius:17px}
+    .col{grid-template-columns:40px minmax(0,1fr);column-gap:16px;padding:27px 22px}
+    .ico{width:40px;height:40px;border-radius:10px}
+    .ico svg{width:20px;height:20px}
+    .eyebrow{font-size:10.5px;line-height:1.35}
+    .col h3{font-size:23px}
+    .col p{font-size:15px;line-height:1.55}
+    .proof{font-size:11.5px;line-height:1.35}
+  }
 </style>
 </head>
 <body>
+  <main aria-labelledby="channels-title">
   <div class="head">
-    <h2>One product. Every place buyers decide.</h2>
+    <h2 id="channels-title">One product. Every place buyers decide.</h2>
     <p>Carve works each surface where products get found and chosen — from the first search to the final “add to bag.”</p>
   </div>
-  <div class="glass">
-    <div class="col">
-      <div class="ico i-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+  <section class="glass" aria-label="Where Carve helps products get discovered and chosen">
+    <article class="col" aria-labelledby="channel-search-title">
+      <div class="ico i-search" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
       <span class="eyebrow">01 · Google search</span>
-      <h3>Found the way shoppers look</h3>
-      <p>Ranked for the exact queries buyers type — with the material, fit and feature words that match real intent.</p>
+      <h3 id="channel-search-title">Found the way shoppers look</h3>
+      <p>Carve aligns verified materials, fit and feature language with the queries shoppers use.</p>
       <span class="proof">Buyer language matched</span>
-    </div>
-    <div class="col">
-      <div class="ico i-ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.9L19 9.8l-4.9 1.9L12 16.7l-1.9-5L5 9.8l5.1-1.9z"/><path d="M18.5 15l.8 2.1 2.2.8-2.2.8-.8 2.1-.8-2.1-2.2-.8 2.2-.8z"/></svg></div>
+    </article>
+    <article class="col" aria-labelledby="channel-ai-title">
+      <div class="ico i-ai" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M12 3l1.9 4.9L19 9.8l-4.9 1.9L12 16.7l-1.9-5L5 9.8l5.1-1.9z"/><path d="M18.5 15l.8 2.1 2.2.8-2.2.8-.8 2.1-.8-2.1-2.2-.8 2.2-.8z"/></svg></div>
       <span class="eyebrow">02 · AI shopping</span>
-      <h3>Recommended, with reasons</h3>
+      <h3 id="channel-ai-title">Recommended, with reasons</h3>
       <p>When an agent compares products, yours explains <em>why</em> it fits the shopper — not just what it is.</p>
       <span class="proof">Answerable attributes</span>
-    </div>
-    <div class="col">
-      <div class="ico i-pdp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/><path d="M9.5 13.5l1.8 1.8 3.2-3.6"/></svg></div>
+    </article>
+    <article class="col" aria-labelledby="channel-pdp-title">
+      <div class="ico i-pdp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/><path d="M9.5 13.5l1.8 1.8 3.2-3.6"/></svg></div>
       <span class="eyebrow">03 · Product page</span>
-      <h3>Closes the last doubt</h3>
-      <p>Every question that decides the purchase is already answered on the page, in your brand’s voice.</p>
+      <h3 id="channel-pdp-title">Closes the last doubt</h3>
+      <p>The page answers the product questions most likely to block a decision, in your brand’s voice.</p>
       <span class="proof">Ready to buy</span>
-    </div>
-  </div>
+    </article>
+  </section>
+  </main>
 <script>
 /* Auto-height. These band pages are flex-centred at height:100%, so any measurement taken as-is
    just mirrors the frame — and growing the frame would grow the "content" in a feedback loop.

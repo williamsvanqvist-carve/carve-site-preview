@@ -4,7 +4,7 @@
   var SHORT = { "Ordara": "Carve" }; /* wordmark + stray exact nodes */
   var HERO = { /* Ordara-original hero strings (not in the extracted list) — "New Carve" positioning */
     "Unlock deeper insights with AI-led conversational surveys.": "Give every product the attention only your best get.",
-    "Describe your objective, choose the audience, and generate an AI-powered survey that feels like a real conversation, not a form.": "Carve is an intelligence that investigates every product, acts on what it finds and follows through — across your whole Shopify catalog. You keep the judgment; Carve gives it catalog-wide reach.",
+    "Describe your objective, choose the audience, and generate an AI-powered survey that feels like a real conversation, not a form.": "Carve watches every product in your Shopify catalog, investigates what is holding it back, acts within the permissions you set and follows through on the result. Your judgment stays at the center.",
     "Ordara raises $20M, Series A funding 2026": "Product-growth intelligence for Shopify brands"
   };
   var ROLL = { /* per-letter rolling-text labels (buttons + nav) */
@@ -40,14 +40,17 @@
   }
   function liveRoot() {
     var c = [].slice.call(document.querySelectorAll(".framer-tCkLZ"));
-    return c.find(function (e) { return Object.keys(e).some(function (k) { return k.indexOf("__react") === 0; }); }) || document.getElementById("main");
+    return c.find(function (e) { return Object.keys(e).some(function (k) { return k.indexOf("__react") === 0; }); }) || null;
   }
   var TICKER_LOGOS = ["shopify_logo_whitebg.svg", "google-logo.svg", "OpenAI-black-wordmark.svg", "Anthropic_Logo_0.svg", "perplexity-logo.png", "feedonomics-logo.svg"];
+  var TICKER_ALTS = ["Shopify", "Google", "OpenAI", "Anthropic", "Perplexity", "Feedonomics"];
   function setImg(el, src) { if (el && el.getAttribute("src") !== src) { el.setAttribute("src", src); el.removeAttribute("srcset"); } }
   function swapImages() {
     var foot = document.querySelector('img[alt="logomark"]');            /* footer wordmark → full lockup */
-    if (foot) { setImg(foot, "./assets/carve/lockup-white.svg"); foot.style.objectFit = "contain"; foot.style.objectPosition = "center"; }
-    setImg(document.querySelector('img[alt="logo"]'), "./assets/carve/orb.svg");  /* CTA emblem (section hidden; kept for safety) */
+    if (foot) { setImg(foot, "./assets/carve/lockup-white.svg"); foot.alt = "Carve"; foot.style.objectFit = "contain"; foot.style.objectPosition = "center"; }
+    var emblem = document.querySelector('img[alt="logo"]');
+    setImg(emblem, "./assets/carve/orb.svg");  /* CTA emblem (section hidden; kept for safety) */
+    if (emblem) emblem.alt = "";
     /* nav logo → carve.ac's real lockup (orb + wordmark in the brand's own logo typography). */
     ensureNavLogos();
     bindNavLogo();
@@ -56,20 +59,21 @@
     if (tick) [].forEach.call(tick.querySelectorAll("img"), function (im, i) {
       var src = "./assets/carve/logos/" + TICKER_LOGOS[i % TICKER_LOGOS.length];
       if (im.getAttribute("src") !== src) { im.setAttribute("src", src); im.removeAttribute("srcset"); }
+      im.alt = TICKER_ALTS[i % TICKER_ALTS.length];
       im.style.objectFit = "contain"; im.style.filter = "grayscale(1)"; im.style.opacity = "0.5";
     });
   }
   /* Rebuilt in the template's design language, one section at a time. */
   var NEW_SECTIONS = [
-    { id: "carve-sec-channels", src: "./carve-channels.html", h: 760, bg: "#F5F0E8", full: true },
-    { id: "carve-sec-stories", src: "./carve-stories.html", h: 830, bg: "#F5F0E8", full: true },
-    { id: "carve-sec-authorities", src: "./carve-authorities.html", h: 700, bg: "#F5F0E8", full: true }
+    { id: "carve-sec-channels", src: "./carve-channels.html", title: "Where Carve acts", h: 760, bg: "#F5F0E8", full: true },
+    { id: "carve-sec-stories", src: "./carve-stories.html", title: "Product investigation examples", h: 830, bg: "#F5F0E8", full: true },
+    { id: "carve-sec-authorities", src: "./carve-authorities.html", title: "Carve evidence hierarchy", h: 700, bg: "#F5F0E8", full: true }
   ];
   function band(s) {
     var sec = document.createElement("section"); sec.id = s.id;
     sec.style.cssText = "width:100%;background:" + s.bg + ";display:flex;justify-content:center;align-items:center;overflow:hidden;"
       + (s.pt ? "padding-top:" + s.pt + "px;" : "") + (s.pb ? "padding-bottom:" + s.pb + "px;" : "");
-    var f = document.createElement("iframe"); f.src = s.src; f.setAttribute("scrolling", "no"); f.loading = "lazy";
+    var f = document.createElement("iframe"); f.src = s.src; f.title = s.title || "Carve product information"; f.setAttribute("scrolling", "no"); f.loading = "lazy";
     f.setAttribute("data-carve-band", s.src);
     f.style.cssText = "width:" + (s.full ? "100%" : "min(100%,1160px)") + ";height:" + s.h + "px;border:0;background:transparent;display:block;transition:height .2s ease;";
     sec.appendChild(f); return sec;
@@ -118,9 +122,12 @@
       if (!a.querySelector(".carve-lockup")) {
         a.style.overflow = "visible";
         var img = document.createElement("img"); img.className = "carve-lockup";
+        img.alt = "Carve";
         img.style.cssText = "height:25px;width:auto;display:block;";
         a.appendChild(img);
       }
+      a.classList.add("carve-brand-slot");
+      if (a.parentElement) a.parentElement.classList.add("carve-brand-host");
     });
     colorNavLogos();
   }
@@ -182,7 +189,10 @@
     fetch("./carve-howitworks.html").then(function (r) { return r.text(); }).then(function (html) {
       var doc = new DOMParser().parseFromString(html, "text/html");
       var style = doc.getElementById("cx-hiw-style"), section = doc.getElementById("cx-hiw");
-      if (style && section) hiwCache = { css: style.textContent, sectionHTML: section.outerHTML };
+      if (style && section) {
+        hiwCache = { css: style.textContent, sectionHTML: section.outerHTML };
+        if (!document.getElementById("cx-hiw")) placeHiw(anchor);
+      }
       hiwFetching = false;
     }).catch(function () { hiwFetching = false; });
   }
@@ -191,8 +201,8 @@
      (Home/Benefits/Blog/Contact/404, X/Instagram/Youtube, samyadeep credit links). Idempotent. */
   var FOOTER_COLS = [
     { wrap: "Section links", title: "Product", items: [
-        { t: "How it works", href: "#cx-hiw" },
-        { t: "Pricing", href: "https://carve.ac/pricing", ext: true }, null, null, null ] },
+        { t: "How it works", href: "./how-it-works/" },
+        { t: "Pricing", href: "./pricing/" }, null, null, null ] },
     { wrap: "Page links", title: "Start", items: [
         { t: "Talk to a founder", href: "https://calendar.app.google/TA9Xv89TnJkJidm78", ext: true },
         { t: "Try Carve on a product", href: "https://carve.ac/demo", ext: true },
@@ -201,7 +211,7 @@
         { t: "Privacy", href: "https://carve.ac/privacy", ext: true },
         { t: "Terms", href: "https://carve.ac/terms", ext: true } ] },
     { wrap: "Social Links", title: "Company", items: [
-        { t: "Insights", href: "https://carve.ac/insights", ext: true },
+        { t: "Insights", href: "./insights/" },
         { t: "william@carve.ac", href: "mailto:william@carve.ac" },
         { t: "LinkedIn", href: "https://www.linkedin.com/company/carve-ai/", ext: true }, null ] }
   ];
@@ -214,7 +224,7 @@
       if (tEl && tEl.textContent.trim() !== col.title) tEl.textContent = col.title;
       [].slice.call(wrap.querySelectorAll("a")).forEach(function (a, i) {
         var it = col.items[i];
-        if (!it) { if (a.style.display !== "none") a.style.display = "none"; return; }
+        if (!it) { if (a.style.display !== "none") a.style.display = "none"; a.removeAttribute("href"); a.removeAttribute("target"); a.removeAttribute("rel"); return; }
         if (a.style.display === "none") a.style.display = "";
         if (a.getAttribute("href") !== it.href) a.setAttribute("href", it.href);
         if (it.ext) { a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener noreferrer"); }
@@ -253,17 +263,24 @@
       }
     });
   }
-  /* nav links: Pricing (#pricing) + FAQ (#faq) already resolve; Product + Blog are dead Ordara
-     links — relabel to Carve/carve.ac and wire them (How it works → the section, Insights). */
+  /* Main navigation now points to the complete local pages. */
   var NAV_MAP = {
-    "Product": { t: "How it works", href: "#cx-hiw" },
-    "Blog": { t: "Insights", href: "https://carve.ac/insights", ext: true }
+    "Product": { t: "How it works", href: "./how-it-works/" },
+    "How it works": { t: "How it works", href: "./how-it-works/" },
+    "Pricing": { t: "Pricing", href: "./pricing/" },
+    "Blog": { t: "Insights", href: "./insights/" },
+    "Insights": { t: "Insights", href: "./insights/" }
   };
   /* Decorative wrappers (e.g. the hero badge) ship as <a href="javascript:void(0)"> — they look
      clickable and go nowhere. Strip the href so they read as plain text, not dead links. */
   function killDeadLinks() {
     [].forEach.call(document.querySelectorAll('a[href="javascript:void(0)"]'), function (a) {
       a.removeAttribute("href"); a.style.cursor = "default";
+    });
+    [].forEach.call(document.querySelectorAll('[data-framer-name="Hero Container"] a'), function (a) {
+      if ((a.textContent || "").indexOf("Product-growth intelligence for Shopify brands") !== -1) {
+        a.removeAttribute("href"); a.removeAttribute("target"); a.removeAttribute("rel"); a.style.cursor = "default";
+      }
     });
   }
   function fixNav() {
@@ -272,7 +289,9 @@
       var t = (a.textContent || "").trim();
       if (t.length && t.length % 2 === 0 && t.slice(0, t.length / 2) === t.slice(t.length / 2)) t = t.slice(0, t.length / 2);
       var m = NAV_MAP[t]; if (!m) return;
-      if (a.getAttribute("href") !== m.href) { a.setAttribute("href", m.href); if (m.ext) { a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener noreferrer"); } }
+      if (a.getAttribute("href") !== m.href) a.setAttribute("href", m.href);
+      if (m.ext) { a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener noreferrer"); }
+      else { a.removeAttribute("target"); a.removeAttribute("rel"); }
       if (a.textContent.trim() !== m.t) a.textContent = m.t;
     });
   }
@@ -305,7 +324,7 @@
     var testi = document.querySelector('[data-framer-name="Testimonial Container"]');
     if (testi && !document.getElementById("carve-guarantee-band")) {
       testi.style.display = "none";
-      testi.insertAdjacentElement("afterend", band({ id: "carve-guarantee-band", src: "./carve-guarantee.html", h: 580, bg: "#F5F0E8", pb: 104 }));
+      testi.insertAdjacentElement("afterend", band({ id: "carve-guarantee-band", src: "./carve-guarantee.html", title: "Carve 90-day guarantee", h: 580, bg: "#F5F0E8", pb: 104 }));
     }
     /* remove sections we don't want (per request): generic final CTA + Founder's Note */
     var cta = document.querySelector('[data-framer-name="CTA Container"]');
@@ -341,20 +360,28 @@
     killDeadLinks();   /* after nav/CTA wiring, so only truly decorative anchors are stripped */
     armReveals();      /* match Framer's scroll-in motion on our sections */
   }
-  /* After the initial hydration burst, top-ups run only when the browser is idle, so the
-     re-apply loop never competes with scroll/animation frames (smoother, less jank). */
-  function slow() {
-    var c = 0, t = setInterval(function () {
-      if (window.requestIdleCallback) requestIdleCallback(apply, { timeout: 400 }); else apply();
-      if (++c >= 12) clearInterval(t);
-    }, 700);
-  }
+  /* Hydration can replace the root once. Observe that short burst, coalesce mutations into
+     animation frames, then disconnect; no recurring full-page scans while people scroll. */
   function start() {
-    var c = 0, fast = setInterval(function () {
-      apply();
-      if (++c >= 16) { clearInterval(fast); slow(); }   /* ~1.6s fast, then idle top-ups for ~8s */
-    }, 100);
-    window.addEventListener("load", apply);
+    var queued = false, passes = 0, observer;
+    function schedule() {
+      if (queued || passes >= 12) return;
+      queued = true;
+      requestAnimationFrame(function () {
+        queued = false;
+        if (!liveRoot()) return;
+        passes++; apply();
+        if (passes >= 12 && observer) observer.disconnect();
+      });
+    }
+    schedule();
+    [120, 420, 900, 1800].forEach(function (ms) { setTimeout(schedule, ms); });
+    window.addEventListener("load", schedule, { once: true });
+    if (window.MutationObserver) {
+      observer = new MutationObserver(schedule);
+      observer.observe(document.getElementById("main") || document.body, { childList: true, subtree: true });
+      setTimeout(function () { observer.disconnect(); schedule(); }, 3500);
+    }
   }
   Promise.all([
     fetch("./ordara-content.json").then(function (r) { return r.json(); }),

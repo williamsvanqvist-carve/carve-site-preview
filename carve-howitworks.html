@@ -25,6 +25,7 @@
 .cx-hiw-eyebrow::before{content:"";width:24px;height:1px;background:var(--terra)}
 .cx-hiw-intro h2{margin:22px 0 0;font:400 clamp(38px,4.4vw,56px)/1.02 var(--serif);letter-spacing:-.028em;max-width:15ch}
 .cx-hiw-intro p{margin:22px 0 0;max-width:600px;color:var(--ink-2);font-size:18px;line-height:1.62}
+.cx-hiw-intro .cx-demo-note{max-width:680px;padding-left:14px;border-left:2px solid rgba(139,74,44,.45);color:var(--ink-3);font:500 11px/1.55 var(--mono);letter-spacing:.035em;text-transform:uppercase}
 
 /* pinned scroll region: tall spacer + a sticky 100vh frame that locks */
 .cx-hiw-scroll{position:relative;height:540vh}          /* 5 steps → ~88vh of scroll each */
@@ -174,12 +175,27 @@
   .cx-hiw-pin{position:relative;height:auto;min-height:0;display:block;padding:10px 0 60px}
   .cx-hiw-body{grid-template-columns:1fr;gap:0}
   .cx-hiw-rail{display:none}
-  .cx-hiw-stage{height:auto;min-height:0;display:grid;gap:70px}
-  .cx-hiw-scene{position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto}
+  .cx-hiw-stage{height:auto;min-height:0;min-width:0;width:100%;max-width:100%;display:grid;gap:70px}
+  .cx-hiw-scene{position:relative;inset:auto;min-width:0;width:100%;max-width:100%;opacity:1;transform:none;pointer-events:auto}
+  .cx-hiw-panel{min-width:0;width:100%;max-width:100%}
   .cx-connect,.cx-work,.cx-learn-main{grid-template-columns:1fr}
   .cx-lab{min-height:380px;border-right:0;border-bottom:1px solid var(--line)}
   .cx-review .head3,.cx-rf{grid-template-columns:110px 1fr 1fr}
   .cx-learn-strip{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .cx-hiw-shell{width:calc(100% - 48px)}
+  .cx-hiw-intro{padding-top:78px}
+  .cx-hiw-stage{gap:58px}
+  .cx-hiw-panel{border-radius:16px}
+  .cx-hiw-panel-top{padding:0 13px}
+  .cx-hiw-panel-top .crumb{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cx-connect>div,.cx-know,.cx-worksteps{padding:20px 18px}
+  .cx-review .head3,.cx-rf{grid-template-columns:72px minmax(0,1fr) minmax(0,1fr)}
+  .cx-review .head3 div,.cx-rf>div{padding-left:9px;padding-right:9px}
+  .cx-review-foot{align-items:flex-start;flex-wrap:wrap;padding:14px}
+  .cx-review-foot .push{margin-left:0}
+  .cx-learn-main{padding:14px}
 }
 </style>
 </head>
@@ -188,8 +204,9 @@
   <!-- intro (scrolls, then the pin locks) -->
   <div class="cx-hiw-intro"><div class="cx-hiw-shell"><div class="in">
     <span class="cx-hiw-eyebrow">How it works</span>
-    <h2>Carve learns your store, then works every product like your best analyst — continuously.</h2>
+    <h2>Carve learns your store, then works every product through the same investigative loop—continuously.</h2>
     <p>Connect Shopify, Search Console and GA4. Confirm what Carve understands, set where it can act — then review every action, or let proven work run on Autopilot.</p>
+    <p class="cx-demo-note">Illustrative walkthrough. Northline Supply, catalog counts and performance figures are examples.</p>
   </div></div></div>
 
   <!-- pinned scroll region -->
