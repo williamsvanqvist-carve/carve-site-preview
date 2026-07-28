@@ -89,3 +89,315 @@ a:has(> .carve-lockup) > div[data-framer-component-type="SVG"] { display: none !
 
 /* Footer lockup: centre it in its bar instead of hugging the left edge. */
 img[alt="logomark"] { object-position: center !important; }
+
+/* ================================================================
+   STATIC NO-DISPLAY HERO TEST
+   Exact Carve hero skin; only the display and hero motion are removed.
+   ================================================================ */
+
+[data-framer-name="Hero Container"] {
+  min-height: 100svh !important;
+  box-sizing: border-box !important;
+}
+
+/* Lift only the hero copy and CTAs; the carousel and every other element stay locked. */
+@media (min-width: 1024px) {
+  [data-framer-name="Hero Container"] > [data-framer-name="Content Container"] {
+    transform: translateY(clamp(-128px, -10vh, -56px)) !important;
+  }
+}
+
+/* Section-by-section enterprise pass, 01: the hero and the following section share one
+   uninterrupted surface. The transition into navy belongs to the next story section. */
+[data-framer-name="Hero Container"] [data-framer-name="Gradient Background"] {
+  background: #F5F0E8 !important;
+}
+
+/* The original hero was light-on-dark. Match its foreground to the shared light surface
+   without moving or restructuring any part of the approved composition. */
+[data-framer-name="Hero Container"] [data-framer-name="Main Heading"] h1,
+[data-framer-name="Hero Container"] [data-framer-name="Badge"] p {
+  --framer-text-color: #1A1410 !important;
+  color: #1A1410 !important;
+}
+
+/* Remove the complete display composition: side lines, frame and product UI. */
+[data-framer-name="Hero Container"] [data-framer-name="Bottom Stack"] {
+  display: none !important;
+}
+
+/* A stronger desktop hero without changing its centering or stacking. */
+@media (min-width: 1200px) {
+  [data-framer-name="Hero Container"] [data-framer-name="Top Stack"],
+  [data-framer-name="Hero Container"] [data-framer-name="Main Heading"] {
+    max-width: 980px !important;
+  }
+
+  [data-framer-name="Hero Container"] [data-framer-name="Main Heading"] h1 {
+    --framer-font-size: clamp(64px, 4vw, 78px) !important;
+    --framer-line-height: 106% !important;
+    font-size: clamp(64px, 4vw, 78px) !important;
+    line-height: 1.06 !important;
+  }
+
+  [data-framer-name="Hero Container"] [data-framer-name="Subheading"] {
+    max-width: 900px !important;
+  }
+
+  [data-framer-name="Hero Container"] [data-framer-name="Subheading"] p {
+    --framer-font-size: 22px !important;
+    --framer-line-height: 148% !important;
+    font-size: 22px !important;
+    line-height: 1.48 !important;
+  }
+}
+
+/* Hero copy and controls remain exactly where they render; no entrance or scroll motion. */
+[data-framer-name="Hero Container"] [data-framer-name="Top Stack"],
+[data-framer-name="Hero Container"] [data-framer-name="Top Stack"] *,
+[data-framer-name="Hero Container"]
+  [data-framer-name="Content Container"]
+  > :first-child {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-framer-name="Hero Container"] [data-framer-name="Top Stack"] [data-nce-scroll],
+[data-framer-name="Hero Container"] [data-framer-name="Top Stack"] [data-framer-appear-id] {
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+[data-framer-name="Hero Container"] [data-framer-name="Subheading"] {
+  opacity: 0.72 !important;
+}
+
+[data-framer-name="Hero Container"] [data-framer-name="Subheading"] p {
+  color: transparent !important;
+  position: relative !important;
+}
+
+[data-framer-name="Hero Container"] [data-framer-name="Subheading"] p::after {
+  color: #1A1410;
+  content: "Carve finds what holds each product back and acts within your permissions—keeping you in control.";
+  inset: 0;
+  position: absolute;
+}
+
+@media (min-width: 1024px) {
+  [data-framer-name="Hero Container"] [data-framer-name="Subheading"] {
+    min-height: 98px !important;
+  }
+
+  [data-framer-name="Hero Container"] [data-framer-name="Subheading"] p::after {
+    transform: translateY(-12px);
+  }
+}
+
+[data-framer-name="Hero Container"]
+  [data-framer-name="Content Container"]
+  > :first-child,
+[data-framer-name="Hero Container"] canvas {
+  pointer-events: none !important;
+}
+
+/* Keep the edge fade narrow so every established logo remains legible while it travels. */
+[data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] {
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%) !important;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%) !important;
+}
+
+/* Framer's original logo wrappers invert their children by 35%, which turns every dark mark
+   muddy against copper. Neutralise that inherited treatment before colouring the assets. */
+[data-framer-name="Hero Container"]
+  [data-framer-name="Logo Ticker"]
+  [data-framer-name="Logo"] {
+  -webkit-filter: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Dark neutral marks stay legible now that the hero and next section share a light surface. */
+[data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] img {
+  filter: grayscale(1) brightness(0.24) contrast(1.08) !important;
+  opacity: 0.92 !important;
+  mix-blend-mode: normal !important;
+  transform-origin: center !important;
+}
+
+/* Balance wide/padded source files against the naturally larger Shopify and Google marks. */
+[data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] img[alt="OpenAI"] {
+  transform: scale(1.35) !important;
+}
+
+[data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] img[alt="Anthropic"] {
+  transform: scale(1.55) !important;
+}
+
+[data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] img[alt="Feedonomics"] {
+  transform: scale(1.3) !important;
+}
+
+@media (max-width: 809px) {
+  [data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] img[alt="Anthropic"] {
+    transform: scale(1.25) !important;
+  }
+
+  [data-framer-name="Hero Container"] [data-framer-name="Logo Ticker"] img[alt="Feedonomics"] {
+    transform: scale(1.15) !important;
+  }
+}
+
+/* Reliable dark-to-light navbar surface, keyed to the section behind it. */
+nav [data-framer-name="Container"] {
+  transition:
+    background-color 480ms cubic-bezier(.22, 1, .36, 1),
+    border-color 480ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 480ms cubic-bezier(.22, 1, .36, 1) !important;
+}
+
+nav [data-framer-name="Navigation"] a,
+nav [data-framer-name="Navigation"] p,
+nav [data-framer-name="Buttons"] a [class*="rolling-text-inner"] {
+  transition: color 380ms cubic-bezier(.22, 1, .36, 1) !important;
+}
+
+nav [data-framer-name="Buttons"] a {
+  transition:
+    background-color 480ms cubic-bezier(.22, 1, .36, 1),
+    border-color 480ms cubic-bezier(.22, 1, .36, 1),
+    box-shadow 480ms cubic-bezier(.22, 1, .36, 1) !important;
+}
+
+html.cx-nav-over-dark nav [data-framer-name="Container"],
+nav[data-cx-surface="dark"] [data-framer-name="Container"] {
+  --border-color: rgba(255, 255, 255, 0.12) !important;
+  background-color: rgba(26, 20, 16, 0.86) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 10px 34px rgba(10, 7, 5, 0.16) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+html.cx-nav-over-dark nav [data-framer-name="Navigation"] *,
+html.cx-nav-over-dark nav [data-framer-name="Navigation"] a,
+html.cx-nav-over-dark nav [data-framer-name="Navigation"] p,
+nav[data-cx-surface="dark"] [data-framer-name="Navigation"] *,
+nav[data-cx-surface="dark"] [data-framer-name="Navigation"] a,
+nav[data-cx-surface="dark"] [data-framer-name="Navigation"] p {
+  --framer-text-color: #F5F0E8 !important;
+  color: #F5F0E8 !important;
+}
+
+html.cx-nav-over-dark nav [data-framer-name="Buttons"] a,
+nav[data-cx-surface="dark"] [data-framer-name="Buttons"] a {
+  --border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: none !important;
+}
+
+html.cx-nav-over-dark
+  nav
+  [data-framer-name="Buttons"]
+  a
+  [class*="rolling-text-inner"],
+nav[data-cx-surface="dark"]
+  [data-framer-name="Buttons"]
+  a
+  [class*="rolling-text-inner"] {
+  --text: #F5F0E8 !important;
+  color: #F5F0E8 !important;
+}
+
+html.cx-nav-over-light nav [data-framer-name="Container"],
+nav[data-cx-surface="light"] [data-framer-name="Container"] {
+  --border-color: rgba(26, 20, 16, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(26, 20, 16, 0.08) !important;
+  box-shadow: 0 8px 28px rgba(26, 20, 16, 0.07) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+html.cx-nav-over-light nav [data-framer-name="Navigation"] *,
+html.cx-nav-over-light nav [data-framer-name="Navigation"] a,
+html.cx-nav-over-light nav [data-framer-name="Navigation"] p,
+nav[data-cx-surface="light"] [data-framer-name="Navigation"] *,
+nav[data-cx-surface="light"] [data-framer-name="Navigation"] a,
+nav[data-cx-surface="light"] [data-framer-name="Navigation"] p {
+  --framer-text-color: #1A1410 !important;
+  color: #1A1410 !important;
+}
+
+html.cx-nav-over-light nav [data-framer-name="Buttons"] a,
+nav[data-cx-surface="light"] [data-framer-name="Buttons"] a {
+  --border-color: rgba(26, 20, 16, 0.08) !important;
+  background: #F5F0E8 !important;
+  border-color: rgba(26, 20, 16, 0.08) !important;
+  box-shadow: none !important;
+}
+
+html.cx-nav-over-light
+  nav
+  [data-framer-name="Buttons"]
+  a
+  [class*="rolling-text-inner"],
+nav[data-cx-surface="light"]
+  [data-framer-name="Buttons"]
+  a
+  [class*="rolling-text-inner"] {
+  --text: #1A1410 !important;
+  color: #1A1410 !important;
+}
+
+/* Attention gap: use the existing moving catalog badges to show where human attention lands.
+   No new section or display; only hierarchy within the approved Benefits composition. */
+[data-framer-name="Benefits Container"] .carve-attention-copy {
+  max-width: 720px;
+  margin: -10px auto 0;
+  color: rgba(26, 20, 16, 0.66);
+  font: 400 18px/1.62 "DM Sans", sans-serif;
+  text-align: center;
+}
+
+[data-framer-name="Benefits Container"] [data-framer-name="Badges"].carve-attention-focus {
+  opacity: 1 !important;
+  box-shadow: 0 14px 34px rgba(26, 20, 16, 0.12) !important;
+}
+
+[data-framer-name="Benefits Container"] [data-framer-name="Badges"].carve-attention-muted {
+  opacity: 0.38 !important;
+  filter: grayscale(0.35) saturate(0.55);
+}
+
+/* Editorial section rhythm: the iframe compositions already have balanced internal spacing,
+   but adjacent full-width bands need a visible pause so each new idea gets its own beat. */
+#carve-sec-channels {
+  padding-top: clamp(160px, 12vw, 240px) !important;
+}
+
+#carve-sec-authorities {
+  padding-top: clamp(140px, 10vw, 210px) !important;
+}
+
+@media (max-width: 809px) {
+  [data-framer-name="Benefits Container"] .carve-attention-copy {
+    margin-top: -14px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  [data-framer-name="Benefits Container"] [data-framer-name="Badges"].carve-attention-muted {
+    opacity: 0.5 !important;
+  }
+
+  #carve-sec-channels,
+  #carve-sec-authorities {
+    padding-top: 92px !important;
+  }
+
+}

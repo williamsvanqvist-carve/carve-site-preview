@@ -3,100 +3,269 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>90-day guarantee — Carve</title>
+<title>Performance you can prove — Carve</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-  @font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400}
-  :root{--bg:#F5F0E8;--bg-2:#EDE7DC;--panel:#FBF9F5;--ink:#1A1410;--ink-2:#5C4F45;--ink-3:#857567;
-    --accent:#8B4A2C;--positive:#2D6A4F;--positive-bg:rgba(45,106,79,.10);--positive-bd:rgba(45,106,79,.24);
-    --border:rgba(26,20,16,.10);--border-2:rgba(26,20,16,.16);
-    --serif:'Redaction',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;}
+  @font-face{
+    font-family:'Redaction';
+    src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');
+    font-weight:400;
+    font-display:swap;
+  }
+  :root{
+    --paper:#F5F0E8;
+    --paper-2:#EDE7DC;
+    --ink:#1A1410;
+    --surface:#FBF8F2;
+    --muted:#5C4F45;
+    --muted-2:#857567;
+    --accent:#8B4A2C;
+    --accent-hover:#A9542E;
+    --line:rgba(26,20,16,.11);
+    --serif:'Redaction',Georgia,serif;
+    --sans:'DM Sans',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+  }
   *{box-sizing:border-box;margin:0}
   html,body{width:100%;height:100%;overflow:hidden}
-  body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;display:flex;align-items:center;justify-content:center}
-  .wrap{width:100%;height:100%;display:grid;grid-template-columns:1.02fr .98fr;gap:0;background:var(--panel);border:1px solid var(--border-2);border-radius:20px;overflow:hidden;box-shadow:0 22px 60px rgba(26,20,16,.09)}
-  /* left — guarantee */
-  .g{padding:52px 54px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
-  .eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--accent);font:500 14px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase}
-  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
-  .g h2{margin:22px 0 16px;font:400 italic 52px/1.02 var(--serif);letter-spacing:-.02em}
-  .g p{max-width:520px;color:var(--ink-2);font-size:19px;line-height:1.6}
-  .g p b{color:var(--ink);font-weight:500}
-  .refund{display:inline-flex;align-items:center;gap:12px;margin:26px 0 22px;padding:14px 20px;border:1px solid var(--positive-bd);border-radius:999px;background:var(--positive-bg);color:var(--positive);font-size:19px;font-weight:500}
-  .refund::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--positive)}
-  .chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0}
-  .chips li{padding:10px 15px;border:1px solid var(--border-2);border-radius:999px;color:var(--ink-2);font:400 14px/1.3 var(--mono)}
-  /* right — measurement */
-  .s{padding:46px 50px;display:flex;flex-direction:column;justify-content:center;gap:22px;background:linear-gradient(160deg,#F8F5EF,#EBE3D6)}
-  .s-lbl{color:var(--ink-3);font:500 13px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;margin-bottom:2px}
-  .stats{list-style:none;padding:0}
-  .stat{padding:22px 0;border-bottom:1px solid var(--border)}
-  .stat:first-child{padding-top:0}
-  .stat:last-child{border-bottom:0;padding-bottom:0}
-  .stat strong{display:block;font:400 46px/1 var(--serif);color:var(--accent);letter-spacing:-.02em}
-  .stat span{display:block;margin-top:9px;color:var(--ink-2);font-size:16.5px;line-height:1.45;max-width:400px}
-
-  @media(max-width:900px){
-    body{align-items:flex-start}
-    .wrap{height:auto;grid-template-columns:1fr}
-    .g{padding:48px 42px;border-right:0;border-bottom:1px solid var(--border)}
-    .s{padding:42px}
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
   }
-  @media(max-width:560px){
-    .wrap{border-radius:16px}
-    .g{padding:34px 24px}
-    .eyebrow{font-size:11.5px;line-height:1.3}
-    .g h2{margin-top:18px;font-size:39px;line-height:1.05}
-    .g p{font-size:16.5px;line-height:1.55}
-    .refund{width:fit-content;max-width:100%;margin:22px 0 18px;padding:12px 14px;border-radius:16px;font-size:16px;line-height:1.35}
-    .refund::before{flex:0 0 auto}
-    .chips{gap:8px}
-    .chips li{max-width:100%;padding:8px 11px;font-size:11.5px;line-height:1.4}
-    .s{padding:32px 24px;gap:18px}
-    .s-lbl{font-size:11px;line-height:1.3}
-    .stat{padding:18px 0}
-    .stat strong{font-size:39px}
-    .stat span{font-size:15px}
+  .outcome{
+    width:min(1080px,100%);
+    height:532.5px;
+    padding:15px;
+    display:grid;
+    grid-template-columns:minmax(0,1.06fr) minmax(0,1fr);
+    gap:15px;
+    overflow:hidden;
+    border:1px solid rgba(26,20,16,.13);
+    border-radius:22px;
+    background:var(--surface);
+    box-shadow:0 28px 72px rgba(55,34,22,.11);
+  }
+  .outcome__content{
+    min-width:0;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .outcome__copy{
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+  }
+  .outcome__intro{
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+  }
+  h2{
+    max-width:502px;
+    font:400 italic 46px/1.02 var(--serif);
+    letter-spacing:-.025em;
+  }
+  .outcome__intro p{
+    max-width:503px;
+    color:var(--muted);
+    font-size:15.5px;
+    font-weight:400;
+    line-height:1.55;
+  }
+  .measurement{
+    max-width:503px;
+  }
+  .measurement h3{
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--accent);
+    font:500 11px/1.4 var(--mono);
+    letter-spacing:.09em;
+    text-transform:uppercase;
+  }
+  .measurement h3::before{
+    width:22px;
+    height:1px;
+    flex:0 0 22px;
+    background:var(--accent);
+    content:"";
+  }
+  .measurement__list{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    list-style:none;
+    padding:0;
+  }
+  .measurement__item{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding:11px 0 12px;
+    border-top:1px solid var(--line);
+  }
+  .measurement__item strong{
+    color:var(--ink);
+    font-size:14.5px;
+    font-weight:500;
+    line-height:18px;
+  }
+  .measurement__item span{
+    color:var(--muted-2);
+    font-size:13.5px;
+    font-weight:400;
+    line-height:17px;
+  }
+  .outcome__cta{
+    width:126.641px;
+    height:30px;
+    padding:5px 5px 5px 13px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-radius:48px;
+    background:var(--ink);
+    color:var(--paper);
+    font-size:13px;
+    font-weight:500;
+    line-height:16px;
+    text-decoration:none;
+    transition:transform .2s ease,background-color .2s ease;
+  }
+  .outcome__cta:hover{transform:translateY(-1px);background:var(--accent)}
+  .outcome__cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .outcome__cta-icon{
+    width:20px;
+    height:20px;
+    flex:0 0 20px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--paper);
+  }
+  .outcome__cta-icon::after{
+    width:10px;
+    height:10px;
+    background:var(--accent);
+    content:"";
+  }
+  .outcome__media{
+    min-width:0;
+    height:100%;
+    overflow:hidden;
+    position:relative;
+    border-radius:12px;
+  }
+  .outcome__media::after{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(145deg,rgba(139,74,44,.12),rgba(245,240,232,.02) 58%,rgba(26,20,16,.08));
+    mix-blend-mode:color;
+    pointer-events:none;
+    content:"";
+  }
+  .outcome__media img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    filter:grayscale(.48) sepia(.1) saturate(.86) contrast(.96) brightness(1.03);
+  }
+
+  @media(max-width:800px){
+    html,body{height:auto;overflow:visible}
+    body{padding:0}
+    .outcome{
+      height:auto;
+      grid-template-columns:1fr;
+    }
+    .outcome__content{
+      min-height:500px;
+      padding:20px;
+    }
+    .outcome__cta{margin-top:36px}
+    .outcome__media{aspect-ratio:1/1}
+  }
+  @media(max-width:520px){
+    .outcome{padding:10px;gap:10px;border-radius:17px}
+    .outcome__content{min-height:470px;padding:14px}
+    .outcome__copy{gap:26px}
+    h2{font-size:38px;line-height:1.04}
+    .outcome__intro p,
+    .measurement__item span{font-size:13px;line-height:17px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .outcome__cta{transition:none}
   }
 </style>
 </head>
 <body>
-  <main class="wrap" aria-labelledby="guarantee-title">
-    <section class="g">
-      <span class="eyebrow">The guarantee</span>
-      <h2 id="guarantee-title">90 days to prove the work.</h2>
-      <p>Measured in <b>your own data</b> — Search Console and GA4. The metric that matters: <b>organic product traffic</b>. Not prompt volume, not vanity scores.</p>
-      <p class="refund">No growth in 90 days? Full refund.</p>
-      <ul class="chips" aria-label="Guarantee terms"><li>No clawback</li><li>No hidden setup fees</li><li>Approved changes stay live in Shopify</li></ul>
+  <main class="outcome" aria-labelledby="outcome-title">
+    <section class="outcome__content">
+      <div class="outcome__copy">
+        <div class="outcome__intro">
+          <h2 id="outcome-title">Performance you can prove.</h2>
+          <p>See what recovered, where new demand emerged and why. Carve ties every action to visibility, traffic and conversion in your own data - and gives your team a clear account of the result.</p>
+        </div>
+
+        <section class="measurement" aria-labelledby="measurement-title">
+          <h3 id="measurement-title">How performance is measured</h3>
+          <ul class="measurement__list">
+            <li class="measurement__item">
+              <strong>Baseline</strong>
+              <span>Connected Search Console and GA4 establish today's organic product traffic.</span>
+            </li>
+            <li class="measurement__item">
+              <strong>90 days</strong>
+              <span>We track organic product traffic against that baseline while Carve works.</span>
+            </li>
+            <li class="measurement__item">
+              <strong>Full refund</strong>
+              <span>If organic product traffic does not grow, the plan is refunded.</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <a class="outcome__cta" href="https://calendar.app.google/TA9Xv89TnJkJidm78" target="_blank" rel="noopener">
+        <span>Book a demo</span>
+        <span class="outcome__cta-icon" aria-hidden="true"></span>
+      </a>
     </section>
-    <section class="s" aria-labelledby="guarantee-context-title">
-      <h3 class="s-lbl" id="guarantee-context-title">How the guarantee is measured</h3>
-      <ul class="stats">
-        <li class="stat"><strong>Baseline</strong><span>Connected Search Console and GA4 establish today’s organic product traffic.</span></li>
-        <li class="stat"><strong>90 days</strong><span>We track organic product traffic against that baseline while Carve works.</span></li>
-        <li class="stat"><strong>Full refund</strong><span>If organic product traffic does not grow, the plan is refunded.</span></li>
-      </ul>
-    </section>
+
+    <figure class="outcome__media" aria-hidden="true">
+      <img src="assets/carve/guarantee-factory-figma.png" alt="">
+    </figure>
   </main>
 <script>
-/* Auto-height. These band pages are flex-centred at height:100%, so any measurement taken as-is
-   just mirrors the frame — and growing the frame would grow the "content" in a feedback loop.
-   Briefly release the height, measure the NATURAL content, restore, then report it up. */
 (function(){
   var last=0;
   function report(){
-    var de=document.documentElement, b=document.body;
-    var dh=de.style.height, bh=b.style.height, ov=b.style.overflow;
-    de.style.height="auto"; b.style.height="auto"; b.style.overflow="visible";
-    var h=Math.ceil(b.scrollHeight)+90;
-    de.style.height=dh; b.style.height=bh; b.style.overflow=ov;
-    if(Math.abs(h-last)<4) return; last=h;
-    parent.postMessage({carveHeight:h, carveSrc:location.pathname},"*");
+    var de=document.documentElement,b=document.body;
+    var dh=de.style.height,bh=b.style.height,ov=b.style.overflow;
+    de.style.height="auto";b.style.height="auto";b.style.overflow="visible";
+    var card=document.querySelector(".outcome");
+    var h=Math.ceil(card ? card.getBoundingClientRect().height : b.scrollHeight);
+    de.style.height=dh;b.style.height=bh;b.style.overflow=ov;
+    if(Math.abs(h-last)<4)return;
+    last=h;
+    parent.postMessage({carveHeight:h,carveSrc:location.pathname},"*");
   }
-  addEventListener("load",report); addEventListener("resize",report);
-  setTimeout(report,300); setTimeout(report,1000);
+  addEventListener("load",report);
+  addEventListener("resize",report);
+  setTimeout(report,300);
+  setTimeout(report,1000);
 })();
 </script>
 </body>

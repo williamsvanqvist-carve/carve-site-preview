@@ -10,33 +10,43 @@
 <style>
   @font-face{font-family:'Redaction';src:url('assets/carve/fonts/redaction-regular.otf') format('opentype');font-weight:400}
   :root{--paper:#F5F0E8;--ink:#1A1410;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Redaction',Georgia,serif;
-    --w:rgba(255,253,250,1);--w7:rgba(255,252,247,.86);--w5:rgba(255,252,247,.64);--line:rgba(255,255,255,.12);}
+    --w:#1A1410;--w7:rgba(26,20,16,.72);--w5:rgba(26,20,16,.68);--line:rgba(26,20,16,.1);}
   *{box-sizing:border-box;margin:0}
   html,body{width:100%;height:100%;overflow:hidden}
   body{color:var(--w);font-family:var(--sans);-webkit-font-smoothing:antialiased;
-    background:linear-gradient(180deg,#F5F0E8 0%,#CFA678 26%,#A87B4E 50%,#CFA678 74%,#F5F0E8 100%);
+    background-color:#E2DAD7;
+    background:
+      radial-gradient(58% 46% at 10% 58%,rgba(151,91,67,.1) 0%,rgba(151,91,67,0) 74%),
+      radial-gradient(52% 44% at 90% 46%,rgba(102,78,98,.07) 0%,rgba(102,78,98,0) 76%),
+      linear-gradient(180deg,
+        #F5F0E8 0%,
+        #EFEAE5 18%,
+        #E2DAD7 42%,
+        #DDD3D2 58%,
+        #E7DFDC 80%,
+        #F5F0E8 100%);
     display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 40px}
   main{width:100%}
   .head{margin:0 auto;text-align:center;max-width:780px}
   .head h2{font:400 clamp(38px,4vw,50px)/1.03 var(--serif);letter-spacing:-.025em}
   .head p{margin:20px auto 0;max-width:610px;color:var(--w7);font-size:19px;line-height:1.6}
   .glass{display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,1180px);margin:64px auto 0;
-    border:1px solid rgba(255,255,255,.14);border-radius:20px;overflow:hidden;
-    background:rgba(255,255,255,.1);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
-    box-shadow:0 26px 70px rgba(60,35,15,.22),inset 0 1px 0 rgba(255,255,255,.1)}
+    border:1px solid rgba(26,20,16,.1);border-radius:20px;overflow:hidden;
+    background:rgba(255,253,249,.62);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+    box-shadow:0 26px 70px rgba(58,40,31,.1),inset 0 1px 0 rgba(255,255,255,.72)}
   .col{padding:48px 44px;border-right:1px solid var(--line);display:flex;flex-direction:column}
   .col:last-child{border-right:0}
-  .ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin-bottom:26px;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+  .ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin-bottom:26px;box-shadow:0 6px 16px rgba(41,27,21,.16)}
   .ico svg{width:22px;height:22px;stroke-width:1.8;color:#fff}
   .i-search{background:linear-gradient(150deg,#F5883C,#EF6820)}
   .i-ai{background:linear-gradient(150deg,#F05BC8,#EE46BC)}
   .i-pdp{background:linear-gradient(150deg,#2FCB7F,#16B364)}
   .eyebrow{color:var(--w5);font:500 12px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase}
-  .col h3{margin:14px 0 15px;font:400 26px/1.1 var(--serif);letter-spacing:-.015em;color:#fff}
+  .col h3{margin:14px 0 15px;font:400 26px/1.1 var(--serif);letter-spacing:-.015em;color:var(--ink)}
   .col p{color:var(--w7);font-size:16px;line-height:1.62;margin:0 0 26px}
-  .col p em{font-style:italic;color:#fff}
-  .proof{margin-top:auto;display:inline-flex;align-items:center;gap:9px;color:#A7D9BC;font:500 13px/1 var(--mono);letter-spacing:.02em}
-  .proof::before{content:"";width:7px;height:7px;border-radius:50%;background:#A7D9BC;box-shadow:0 0 0 4px rgba(167,217,188,.14)}
+  .col p em{font-style:italic;color:var(--ink)}
+  .proof{margin-top:auto;display:inline-flex;align-items:center;gap:9px;color:#2E6A55;font:500 13px/1 var(--mono);letter-spacing:.02em}
+  .proof::before{content:"";width:7px;height:7px;border-radius:50%;background:#2E6A55;box-shadow:0 0 0 4px rgba(46,106,85,.12)}
 
   @media(max-width:960px){
     body{padding:56px 32px}
@@ -68,8 +78,8 @@
 <body>
   <main aria-labelledby="channels-title">
   <div class="head">
-    <h2 id="channels-title">One product. Every place buyers decide.</h2>
-    <p>Carve works each surface where products get found and chosen — from the first search to the final “add to bag.”</p>
+    <h2 id="channels-title">And every place those products have to perform.</h2>
+    <p>The same understanding follows each product from search and AI recommendation to the final decision on the product page.</p>
   </div>
   <section class="glass" aria-label="Where Carve helps products get discovered and chosen">
     <article class="col" aria-labelledby="channel-search-title">
@@ -82,8 +92,8 @@
     <article class="col" aria-labelledby="channel-ai-title">
       <div class="ico i-ai" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M12 3l1.9 4.9L19 9.8l-4.9 1.9L12 16.7l-1.9-5L5 9.8l5.1-1.9z"/><path d="M18.5 15l.8 2.1 2.2.8-2.2.8-.8 2.1-.8-2.1-2.2-.8 2.2-.8z"/></svg></div>
       <span class="eyebrow">02 · AI shopping</span>
-      <h3 id="channel-ai-title">Recommended, with reasons</h3>
-      <p>When an agent compares products, yours explains <em>why</em> it fits the shopper — not just what it is.</p>
+      <h3 id="channel-ai-title">Understood, with reasons</h3>
+      <p>Verified attributes give shopping agents grounded evidence for <em>why</em> a product fits — not just what it is.</p>
       <span class="proof">Answerable attributes</span>
     </article>
     <article class="col" aria-labelledby="channel-pdp-title">

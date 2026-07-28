@@ -4,7 +4,8 @@
   var SHORT = { "Ordara": "Carve" }; /* wordmark + stray exact nodes */
   var HERO = { /* Ordara-original hero strings (not in the extracted list) — "New Carve" positioning */
     "Unlock deeper insights with AI-led conversational surveys.": "Give every product the attention only your best get.",
-    "Describe your objective, choose the audience, and generate an AI-powered survey that feels like a real conversation, not a form.": "Carve watches every product in your Shopify catalog, investigates what is holding it back, acts within the permissions you set and follows through on the result. Your judgment stays at the center.",
+    "Describe your objective, choose the audience, and generate an AI-powered survey that feels like a real conversation, not a form.": "Carve finds what holds each product back and acts within your permissions—keeping you in control.",
+    "Carve watches every product in your Shopify catalog, investigates what is holding it back, acts within the permissions you set and follows through on the result. Your judgment stays at the center.": "Carve finds what holds each product back and acts within your permissions—keeping you in control.",
     "Ordara raises $20M, Series A funding 2026": "Product-growth intelligence for Shopify brands"
   };
   var ROLL = { /* per-letter rolling-text labels (buttons + nav) */
@@ -60,20 +61,25 @@
       var src = "./assets/carve/logos/" + TICKER_LOGOS[i % TICKER_LOGOS.length];
       if (im.getAttribute("src") !== src) { im.setAttribute("src", src); im.removeAttribute("srcset"); }
       im.alt = TICKER_ALTS[i % TICKER_ALTS.length];
-      im.style.objectFit = "contain"; im.style.filter = "grayscale(1)"; im.style.opacity = "0.5";
+      im.style.objectFit = "contain";
+      im.style.setProperty("filter", "grayscale(1) brightness(0.24) contrast(1.08)", "important");
+      im.style.setProperty("opacity", "0.92", "important");
+      im.style.setProperty("mix-blend-mode", "normal", "important");
     });
   }
   /* Rebuilt in the template's design language, one section at a time. */
   var NEW_SECTIONS = [
-    { id: "carve-sec-channels", src: "./carve-channels.html", title: "Where Carve acts", h: 760, bg: "#F5F0E8", full: true },
-    { id: "carve-sec-stories", src: "./carve-stories.html", title: "Product investigation examples", h: 830, bg: "#F5F0E8", full: true },
-    { id: "carve-sec-authorities", src: "./carve-authorities.html", title: "Carve evidence hierarchy", h: 700, bg: "#F5F0E8", full: true }
+    { id: "carve-sec-stories", src: "./carve-stories.html", rev: "20260728-narrative-21", title: "Catalog-wide product investigations", h: 830, bg: "#F5F0E8", full: true },
+    { id: "carve-sec-channels", src: "./carve-channels.html", rev: "20260728-narrative-21", title: "Where Carve acts", h: 760, bg: "#F5F0E8", full: true },
+    { id: "carve-sec-authorities", src: "./carve-authorities.html", rev: "20260728-narrative-21", title: "Carve intelligence and control", h: 700, bg: "#F5F0E8", full: true }
   ];
   function band(s) {
     var sec = document.createElement("section"); sec.id = s.id;
     sec.style.cssText = "width:100%;background:" + s.bg + ";display:flex;justify-content:center;align-items:center;overflow:hidden;"
       + (s.pt ? "padding-top:" + s.pt + "px;" : "") + (s.pb ? "padding-bottom:" + s.pb + "px;" : "");
-    var f = document.createElement("iframe"); f.src = s.src; f.title = s.title || "Carve product information"; f.setAttribute("scrolling", "no"); f.loading = "lazy";
+    var f = document.createElement("iframe");
+    f.src = s.src + (s.rev ? ((s.src.indexOf("?") === -1 ? "?" : "&") + "v=" + encodeURIComponent(s.rev)) : "");
+    f.title = s.title || "Carve product information"; f.setAttribute("scrolling", "no"); f.loading = "lazy";
     f.setAttribute("data-carve-band", s.src);
     f.style.cssText = "width:" + (s.full ? "100%" : "min(100%,1160px)") + ";height:" + s.h + "px;border:0;background:transparent;display:block;transition:height .2s ease;";
     sec.appendChild(f); return sec;
@@ -186,7 +192,7 @@
     if (document.getElementById("cx-hiw")) return;      /* already placed */
     if (hiwCache) { placeHiw(anchor); return; }          /* cached → place synchronously */
     if (hiwFetching) return; hiwFetching = true;
-    fetch("./carve-howitworks.html").then(function (r) { return r.text(); }).then(function (html) {
+    fetch("./carve-howitworks.html?v=20260728-narrative-21").then(function (r) { return r.text(); }).then(function (html) {
       var doc = new DOMParser().parseFromString(html, "text/html");
       var style = doc.getElementById("cx-hiw-style"), section = doc.getElementById("cx-hiw");
       if (style && section) {
@@ -312,20 +318,57 @@
       else revealIO.observe(el);
     });
   }
+  /* Concentrate Williams' five-part story inside the existing Framer sections. The hero stays
+     untouched: this starts with the attention gap immediately below it, then closes on outcomes. */
+  var ATTENTION_BADGES = {
+    "Every product watched": "Priority products · closely watched",
+    "Evidence before action": "Weak visibility · unseen",
+    "Your judgment stays in the loop": "Conversion gaps · unseen",
+    "Acts only with permission": "Missed demand · unseen",
+    "Measures what changed": "The rest of the catalog · waiting"
+  };
+  function setNarrativeText(el, text) {
+    if (el && el.textContent.trim() !== text) el.textContent = text;
+  }
+  function shapeNarrative() {
+    var benefits = document.querySelector('[data-framer-name="Benefits Container"]');
+    if (benefits) {
+      setNarrativeText(benefits.querySelector('[data-framer-name="Main Heading"] h2'), "Your catalog is bigger than your team’s attention.");
+      var main = benefits.querySelector('[data-framer-name="Main Content Text"]');
+      if (main) {
+        var lede = main.querySelector(".carve-attention-copy");
+        if (!lede) { lede = document.createElement("p"); lede.className = "carve-attention-copy"; main.appendChild(lede); }
+        setNarrativeText(lede, "Your team gives priority products the judgment they need. Across the rest, weak visibility, conversion gaps and missed demand can stay hidden until performance is already lost.");
+      }
+      [].forEach.call(benefits.querySelectorAll('[data-framer-name="Badges"] p'), function (p) {
+        var current = p.textContent.trim();
+        if (ATTENTION_BADGES[current]) { p.textContent = ATTENTION_BADGES[current]; current = p.textContent; }
+        var card = p.closest('[data-framer-name="Badges"]'); if (!card) return;
+        var focus = current.indexOf("Priority products") === 0;
+        var muted = current.indexOf("· unseen") !== -1 || current.indexOf("· waiting") !== -1;
+        card.classList.toggle("carve-attention-focus", focus);
+        card.classList.toggle("carve-attention-muted", muted);
+      });
+    }
+    var features = document.querySelector('[data-framer-name="Features Container"]');
+    if (features) {
+      setNarrativeText(features.querySelector('[data-framer-name="Main Heading"] h2'), "The catalog performs better. Your team knows why.");
+      setNarrativeText(features.querySelector('[data-framer-name="Subheading"] p'), "Carve helps recover slipping performance, improve unrealized potential and capture demand your catalog can already serve. Every result stays tied to the evidence and action behind it.");
+    }
+  }
   function injectSections() {
     injectHowItWorks();
-    /* channels (and any following bands) anchor AFTER the native HIW section, so the
-       order is deterministic: HIW → channels, no race with the shared Framer anchor. */
+    /* The product stories zoom out immediately after the single-product walkthrough, followed
+       by the surfaces where those products perform and the control model behind each action. */
     var hiw = document.getElementById("cx-hiw");
-    if (hiw && !document.getElementById("carve-sec-channels")) {
+    if (hiw && !document.getElementById(NEW_SECTIONS[0].id)) {
       var prev = hiw;
       NEW_SECTIONS.forEach(function (s) { var sec = band(s); prev.insertAdjacentElement("afterend", sec); prev = sec; });
     }
     var testi = document.querySelector('[data-framer-name="Testimonial Container"]');
-    if (testi && !document.getElementById("carve-guarantee-band")) {
-      testi.style.display = "none";
-      testi.insertAdjacentElement("afterend", band({ id: "carve-guarantee-band", src: "./carve-guarantee.html", title: "Carve 90-day guarantee", h: 580, bg: "#F5F0E8", pb: 104 }));
-    }
+    if (testi) testi.style.display = "none";
+    var guarantee = document.getElementById("carve-guarantee-band");
+    if (guarantee) guarantee.remove();
     /* remove sections we don't want (per request): generic final CTA + Founder's Note */
     var cta = document.querySelector('[data-framer-name="CTA Container"]');
     if (cta) cta.style.display = "none";
@@ -351,9 +394,11 @@
     swapImages();
     /* 4) rebrand Ordara's own pricing section (names + price only) */
     rebrandPricing();
-    /* 5) inject the rich carve.ac sections + guarantee, hide removed sections */
+    /* 5) shape the attention-gap and outcome sections without changing their layout */
+    shapeNarrative();
+    /* 6) inject the rich carve.ac sections + guarantee, hide removed sections */
     injectSections();
-    /* 6) footer + CTA buttons + nav links → only carve.ac-matching info / destinations */
+    /* 7) footer + CTA buttons + nav links → only carve.ac-matching info / destinations */
     fixFooter();
     fixCtas();
     fixNav();
@@ -392,4 +437,176 @@
     Object.keys(HERO).forEach(function (k) { EXACT[k] = HERO[k]; });
     start();
   }).catch(function () { start(); });
+})();
+
+/* STATIC NO-DISPLAY HERO TEST — keeps the approved hero and static dot field. */
+(function () {
+  var queued = false;
+  var navBound = false;
+  var navTicking = false;
+
+  function setImportant(element, property, value) {
+    if (!element) return;
+    if (
+      element.style.getPropertyValue(property).trim() === value &&
+      element.style.getPropertyPriority(property) === "important"
+    ) return;
+    element.style.setProperty(property, value, "important");
+  }
+
+  function paintTickerContrast() {
+    [].forEach.call(
+      document.querySelectorAll('[data-framer-name="Logo Ticker"]'),
+      function (ticker) {
+        setImportant(ticker, "-webkit-mask-image", "linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%)");
+        setImportant(ticker, "mask-image", "linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%)");
+        [].forEach.call(ticker.querySelectorAll('[data-framer-name="Logo"]'), function (wrapper) {
+          setImportant(wrapper, "-webkit-filter", "none");
+          setImportant(wrapper, "filter", "none");
+          setImportant(wrapper, "opacity", "1");
+        });
+      }
+    );
+    [].forEach.call(
+      document.querySelectorAll('[data-framer-name="Logo Ticker"] img'),
+      function (image) {
+        setImportant(image, "filter", "grayscale(1) brightness(0.24) contrast(1.08)");
+        setImportant(image, "opacity", "0.92");
+        setImportant(image, "mix-blend-mode", "normal");
+      }
+    );
+  }
+
+  function paintNavSurface(nav, overLight) {
+    var ink = overLight ? "#1A1410" : "#F5F0E8";
+    var surface = overLight ? "rgba(255, 255, 255, 0.94)" : "rgba(26, 20, 16, 0.86)";
+    var border = overLight ? "rgba(26, 20, 16, 0.08)" : "rgba(255, 255, 255, 0.12)";
+    var shadow = overLight
+      ? "0 8px 28px rgba(26, 20, 16, 0.07)"
+      : "0 10px 34px rgba(10, 7, 5, 0.16)";
+    var buttonSurface = overLight ? "#F5F0E8" : "rgba(255, 255, 255, 0.07)";
+    var buttonBorder = overLight ? "rgba(26, 20, 16, 0.08)" : "rgba(255, 255, 255, 0.14)";
+    var container = nav.querySelector('[data-framer-name="Container"]');
+    var button = nav.querySelector('[data-framer-name="Buttons"] a');
+
+    nav.setAttribute("data-cx-surface", overLight ? "light" : "dark");
+    if (container) {
+      setImportant(container, "background", surface);
+      setImportant(container, "background-color", surface);
+      setImportant(container, "--border-color", border);
+      setImportant(container, "border-color", border);
+      setImportant(container, "box-shadow", shadow);
+      setImportant(container, "backdrop-filter", "blur(18px)");
+      setImportant(container, "-webkit-backdrop-filter", "blur(18px)");
+    }
+
+    [].forEach.call(
+      nav.querySelectorAll('[data-framer-name="Navigation"] a, [data-framer-name="Navigation"] p'),
+      function (text) {
+        setImportant(text, "--framer-text-color", ink);
+        setImportant(text, "color", ink);
+      }
+    );
+
+    if (button) {
+      setImportant(button, "background", buttonSurface);
+      setImportant(button, "background-color", buttonSurface);
+      setImportant(button, "--border-color", buttonBorder);
+      setImportant(button, "border-color", buttonBorder);
+      setImportant(button, "box-shadow", "none");
+      [].forEach.call(button.querySelectorAll('[class*="rolling-text-inner"], [class*="rolling-text-inner"] span'), function (text) {
+        setImportant(text, "--text", ink);
+        setImportant(text, "color", ink);
+      });
+    }
+
+    [].forEach.call(nav.querySelectorAll('[data-framer-name="Menu Button"] > div'), function (bar) {
+      setImportant(bar, "background-color", ink);
+    });
+
+    [].forEach.call(nav.querySelectorAll(".carve-lockup"), function (lockup) {
+      var source = overLight
+        ? "./assets/carve/lockup-black.svg"
+        : "./assets/carve/lockup-white.svg";
+      if (lockup.getAttribute("src") !== source) lockup.setAttribute("src", source);
+    });
+  }
+
+  function updateNavSurface() {
+    navTicking = false;
+    var hero = document.querySelector('[data-framer-name="Hero Container"]');
+    var navs = [].slice.call(document.querySelectorAll("nav"));
+    if (!hero || !navs.length) return;
+
+    var overLight = true;
+
+    document.documentElement.classList.toggle("cx-nav-over-light", overLight);
+    document.documentElement.classList.toggle("cx-nav-over-dark", !overLight);
+    navs.forEach(function (nav) { paintNavSurface(nav, overLight); });
+    paintTickerContrast();
+  }
+
+  function queueNavSurface() {
+    if (navTicking) return;
+    navTicking = true;
+    requestAnimationFrame(updateNavSurface);
+  }
+
+  function bindNavSurface() {
+    if (navBound) {
+      queueNavSurface();
+      return;
+    }
+    navBound = true;
+    window.addEventListener("scroll", queueNavSurface, { passive: true });
+    window.addEventListener("resize", queueNavSurface);
+    queueNavSurface();
+  }
+
+  function applyStaticHero() {
+    queued = false;
+    var hero = document.querySelector('[data-framer-name="Hero Container"]');
+    if (!hero) return;
+
+    var display = hero.querySelector('[data-framer-name="Bottom Stack"]');
+    if (display) {
+      display.hidden = true;
+      display.setAttribute("aria-hidden", "true");
+    }
+
+    [].forEach.call(
+      hero.querySelectorAll('[data-framer-name="Top Stack"] [data-nce-scroll]'),
+      function (element) {
+        element.removeAttribute("data-nce-scroll");
+        element.removeAttribute("data-nce-scroll-delay");
+      }
+    );
+
+    paintTickerContrast();
+    document.documentElement.classList.add("cx-static-hero-ready");
+    bindNavSurface();
+    queueNavSurface();
+    document.title = "Carve — Static no-display hero";
+  }
+
+  function queue() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(applyStaticHero);
+  }
+
+  [0, 80, 220, 500, 900, 1600, 2800, 5000, 8000].forEach(function (delay) {
+    setTimeout(queue, delay);
+  });
+
+  /* Framer may replace the hydrated navbar after its first render. Keep this cheap
+     child-list observer alive so every replacement receives the same surface state. */
+  if (window.MutationObserver) {
+    var observer = new MutationObserver(queue);
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+  window.addEventListener("load", queue, { once: true });
 })();
